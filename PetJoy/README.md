@@ -31,8 +31,8 @@ This graduation project was built collaboratively by:
 
 * **Aseel El-Khatib** - *Full-Stack Developer* - [@aseel-k](https://github.com/aseel-k)
 * **Haneen Mustafa** - *Full-Stack Developer* - [Haneen-Alhasan](https://github.com/Haneen-Alhasan)
-* **Hala Muhammad** - *FrontEnd Developer* - [iihhala03](https://github.com/iihhala03)
-* **Razan Qaqish** - *FrontEnd Developer* - [razanqaqish2](https://github.com/razanqaqish2)
+* **Hala Muhammad** - *Front-End Developer* - [iihhala03](https://github.com/iihhala03)
+* **Razan Qaqish** - *Front-End Developer* - [razanqaqish2](https://github.com/razanqaqish2)
 
 
 ---
