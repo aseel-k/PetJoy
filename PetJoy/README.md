@@ -25,7 +25,17 @@ Petjoy is a full-stack ASP.NET Core MVC application designed to manage veterinar
 - **Architecture:** MVC Pattern, Repository Pattern, Role-Based Authorization
 
 ---
+## 👥 Team & Credits
 
+This graduation project was built collaboratively by:
+
+* **Aseel El-Khatib** - *Full-Stack Developer* - [@aseel-k](https://github.com/aseel-k)
+* **Haneen Mustafa** - *Full-Stack Developer* - [Haneen-Alhasan](https://github.com/Haneen-Alhasan)
+* **Hala Muhammad** - *FrontEnd Developer* - [iihhala03](https://github.com/iihhala03)
+* **Razan Qaqish** - *FrontEnd Developer* - [razanqaqish2](https://github.com/razanqaqish2)
+
+
+---
 ## 🔒 Copyright & License
 
 © 2026 Aseel El-Khatib. All Rights Reserved.  
