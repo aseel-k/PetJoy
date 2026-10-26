@@ -7,7 +7,7 @@ Petjoy is a full-stack ASP.NET Core MVC application designed to manage veterinar
 ## 🌟 Features Overview
 
 ### 🛍️ Storefront & Customer Experience
-- Browse veterinary products and care services with category filtering.
+- Browse food, clothes, toys, veterinary products and care services with category filtering.
 - Interactive shopping cart, pet adoption requests, and checkout flow.
 
 ### 🛡️ Administrative Dashboard
@@ -19,9 +19,9 @@ Petjoy is a full-stack ASP.NET Core MVC application designed to manage veterinar
 
 ## 🛠️ Tech Stack & Architecture
 
-- **Backend:** C#, ASP.NET Core MVC, Entity Framework Core
-- **Database:** Microsoft SQL Server (SSMS 22)
 - **Frontend:** HTML5, CSS3, JavaScript, Bootstrap
+- **Backend:** C#, ASP.NET Core MVC, Entity Framework Core, LINQ, RESTful APIs[cite: 9]
+- **Database:** Microsoft SQL Server (SSMS 22)
 - **Architecture:** MVC Pattern, Repository Pattern, Role-Based Authorization
 
 ---
