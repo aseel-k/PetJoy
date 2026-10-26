@@ -1,0 +1,355 @@
+﻿@model IEnumerable<PetJoy.Models.AdoptPet>
+@{
+    ViewData["Title"] = "Adopt a Pet";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+
+
+    /* ================= VIEW DETAILS BUTTON  ================ */
+    .view-details-btn,
+    .view-details-btn:hover,
+    .view-details-btn:focus,
+    .view-details-btn:active,
+    .view-details-btn:disabled {
+        background-color: #1b4b8b !important;
+        border-color: #1b4b8b !important;
+        color: #ffffff !important;
+        box-shadow: none !important;
+        outline: none !important;
+        transform: none !important;
+    }
+
+        /* remove bootstrap click animation */
+        .view-details-btn:active {
+            filter: none !important;
+        }
+
+
+
+    /* -------------------- PET CARDS & MODALS -------------------- */
+    .pet-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #e0e0e0;
+        background-color: #ffffff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+        .pet-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0px 10px 25px rgba(27,75,139,0.2);
+        }
+
+    .pet-image-wrapper {
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px 15px 0 0;
+    }
+
+    .pet-image {
+        height: 220px;
+        object-fit: cover;
+        width: 100%;
+        transition: transform 0.5s ease;
+    }
+
+    .pet-card:hover .pet-image {
+        transform: scale(1.1);
+    }
+
+    .card-body {
+        padding: 15px 15px !important;
+    }
+
+   
+    .card-title {
+        margin-bottom: 8px;
+    }
+
+    .modal {
+        outline: 0 !important;
+    }
+
+    .clean-white-modal {
+        background: #1b4b8b !important;
+        border-radius: 22px;
+        border: 2px solid #1b4b8b !important;
+        overflow: hidden;
+        box-shadow: none !important;
+    }
+
+    .clean-header {
+        background: #1b4b8b;
+        color: #fff;
+        border-radius: 0;
+        padding: 15px 20px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        position: relative;
+        z-index: 100;
+        border-bottom: 2px solid #1b4b8b;
+    }
+
+    .modal-body-white {
+        background: #ffffff !important;
+    }
+
+    .btn-close-white {
+        filter: brightness(0) invert(1);
+    }
+
+    .clean-modal-image {
+        height: 350px;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 0 0 18px 18px;
+    }
+
+    .modal-body table {
+        border-collapse: collapse !important;
+        margin-top: 0;
+        width: auto !important;
+    }
+
+        .modal-body table th, .modal-body table td {
+            padding: 0 !important;
+            margin: 0 !important;
+            line-height: 1.2;
+            vertical-align: middle;
+        }
+
+        .modal-body table th {
+            white-space: nowrap;
+            padding-right: 3px !important;
+        }
+
+        .modal-body table td {
+            padding-left: 0 !important;
+        }
+
+
+
+    .modal-body p {
+        color: #000 !important;
+        margin-top: 0 !important;
+    }
+
+    .modal-content.clean-white-modal {
+        border: 2px solid #1b4b8b !important;
+        box-shadow: none !important;
+    }
+
+    /* -------------------- MODERN DROPDOWN STYLES -------------------- */
+    .filter-dropdown-modern {
+        border-radius: 50px !important;
+        padding: 14px 25px;
+        background: linear-gradient(135deg, #f8f9fa, #e0e7ff);
+        border: 1px solid #d1d1d1;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #333;
+        transition: all 0.3s ease;
+    }
+
+        .filter-dropdown-modern:hover {
+            background: linear-gradient(135deg, #e0e7ff, #f8f9fa);
+            border-color: #1b4b8b;
+            box-shadow: 0 5px 15px rgba(27, 75, 139, 0.2);
+        }
+
+        .filter-dropdown-modern:focus {
+            outline: none;
+            box-shadow: 0 0 12px rgba(27, 75, 139, 0.3);
+            border-color: #1b4b8b;
+            background-color: #ffffff;
+            color: #000;
+        }
+
+    /* -------------------- ADOPTED TAG -------------------- */
+    /* -------------------- ADOPTED RIBBON -------------------- */
+    .adopted-badge {
+        position: absolute;
+        top: 14px; 
+        right: -40px; /* shift outside corner */
+        width: 140px; /* fixed width for ribbon */
+        text-align: center;
+        background-color: #b02121;
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 5px 0;
+        transform: rotate(45deg); /* diagonal */
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        z-index: 10;
+    }
+
+        .adopted-badge::before,
+        .adopted-badge::after {
+            content: "";
+            position: absolute;
+            bottom: -6px;
+            border: 6px solid transparent;
+            border-top-color: #b02121;
+        }
+
+        .adopted-badge::before {
+            left: 0;
+        }
+
+        .adopted-badge::after {
+            right: 0;
+        }
+
+</style>
+
+<div class="container py-5">
+    <h2 class="text-center mb-4 fw-bold text-dark">Find Your New Pet</h2>
+
+    <!-- Search Filters -->
+    <div class="row mb-4 g-3 justify-content-center">
+        <div class="col-6 col-md-3">
+            <select id="searchType" class="form-select filter-compact shadow-sm">
+                <option value="">All Types</option>
+                <option value="cat">Cat</option>
+                <option value="dog">Dog</option>
+                <option value="bird">Bird</option>
+                <option value="small pets">Small Pet</option>
+            </select>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <select id="searchGender" class="form-select filter-compact shadow-sm">
+                <option value="">All Genders</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="row g-4 justify-content-center" id="petContainer">
+        @foreach (var pet in Model)
+        {
+            <div class="col-6 col-sm-4 col-md-3 col-lg-3 pet-item" data-animal="@pet.Animal.ToLower()" data-gender="@pet.Gender.ToLower()">
+                <div class="card pet-card text-center h-100 border-0 position-relative">
+
+                    @* ADOPTED TAG *@
+                    @if (pet.IsAdopted)
+                    {
+                        <span class="adopted-badge">
+                            Adopted
+                        </span>
+                    }
+
+
+                    <div class="pet-image-wrapper">
+                        <img src="@pet.Note"
+                             class="card-img-top pet-image"
+                             alt="@pet.PetName"
+                             data-bs-toggle="modal"
+                             data-bs-target="#petModal_@pet.AdoptionId"
+                             style="cursor:pointer;" />
+                    </div>
+
+                    <div class="card-body d-flex flex-column pt-3">
+                        <h5 class="card-title fw-bold text-dark">@pet.PetName</h5>
+
+
+                        <button class="btn view-details-btn btn-sm mt-2"
+                                data-bs-toggle="modal"
+                                data-bs-target="#petModal_@pet.AdoptionId">
+                            View Details
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="petModal_@pet.AdoptionId" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content clean-white-modal">
+                            <div class="clean-header d-flex justify-content-between align-items-center px-4 py-3">
+                                <h4 class="m-0 fw-bold text-white">Meet @pet.PetName</h4>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <div class="modal-body p-4 row g-4 modal-body-white">
+                                <div class="col-md-5">
+                                    <img src="@pet.Note" class="img-fluid rounded-4 shadow-sm clean-modal-image" alt="@pet.PetName" />
+                                </div>
+
+                                <div class="col-md-7">
+                                    <h4 class="mb-3 fw-bold text-dark">General Info</h4>
+                                    <table class="table table-sm table-borderless">
+                                        <tbody>
+                                            <tr><th scope="row">Animal:</th><td>@pet.Animal</td></tr>
+                                            <tr><th scope="row">Breed:</th><td>@pet.Breed</td></tr>
+                                            <tr><th scope="row">Age:</th><td>@pet.Age years</td></tr>
+                                            <tr><th scope="row">Gender:</th><td>@pet.Gender</td></tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="text-dark"><span class="fw-bold">Medical History:</span> @pet.MedicalHistory</p>
+                                    <h4 class="fw-bold text-dark mb-1">About @pet.PetName</h4>
+                                    <p class="mt-0">@pet.Description</p>
+
+                                    @if (pet.IsAdopted)
+                                    {
+                                        <div class="alert alert-success text-center fw-bold mt-3">
+                                            This pet has already been adopted
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="AdoptPet"
+                                           asp-action="AdopterInfo"
+                                           asp-route-id="@pet.AdoptionId"
+                                           class="btn view-details-btn mt-3 w-100 btn-lg">
+                                            Adopt Me
+                                        </a>
+                                    }
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    const searchType = document.getElementById('searchType');
+    const searchGender = document.getElementById('searchGender');
+    const petItems = document.querySelectorAll('.pet-item');
+
+    function filterPets() {
+        const typeValue = searchType.value.toLowerCase();
+        const genderValue = searchGender.value.toLowerCase();
+
+        petItems.forEach(pet => {
+            const petType = pet.dataset.animal;
+            const petGender = pet.dataset.gender;
+
+            const typeMatch = typeValue === "" || petType === typeValue;
+            const genderMatch = genderValue === "" || petGender === genderValue;
+
+            if (typeMatch && genderMatch) {
+                pet.style.display = '';
+            } else {
+                pet.style.display = 'none';
+            }
+        });
+    }
+
+    searchType.addEventListener('change', filterPets);
+    searchGender.addEventListener('change', filterPets);
+</script>

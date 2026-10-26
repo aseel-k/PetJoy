@@ -1,0 +1,1864 @@
+﻿@model IEnumerable<PetJoy.Models.ShopProduct>
+
+@{
+	ViewData["Title"] = "Pet Joy";
+	var bestSellers = ViewBag.BestSellers as List<PetJoy.Models.ShopProduct>;
+}
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+
+
+<style>
+
+
+	.main-wrapper {
+		max-width: 85%;
+		margin: 0 auto;
+		padding: 20px;
+	}
+
+	.main-title {
+		font-family: 'Segoe UI', Arial, sans-serif;
+		font-size: 40px;
+		font-weight: 500;
+		color: #333;
+		text-align: left;
+		max-width: 1250px;
+		margin: 30px auto 10px auto;
+		padding-left: 0;
+	}
+
+		.main-title p {
+			margin-bottom: 30px !important;
+		}
+
+	/* --- Hero Section & Swiper --- */
+	.hero-section {
+		position: relative;
+		min-height: 100vh;
+		background-image: linear-gradient(rgba(224, 242, 254, 0.7), rgba(224, 242, 254, 0.7)), url('/images/main3.png');
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+		display: flex;
+		align-items: center;
+		overflow: hidden;
+	}
+
+	.main-swiper {
+		width: 100%;
+		height: 100vh;
+	}
+
+	.swiper-slide {
+	 align-items: center;
+	}
+
+	.hero-content {
+		padding-left: 80px;
+		text-align: left;
+	}
+
+	.hero-title-small {
+		font-style: italic;
+		font-size: 2rem;
+		color: #1e3a8a;
+	}
+
+	.hero-title-main {
+		font-size: 5rem;
+		font-weight: 800;
+		line-height: 1;
+		margin: 10px 0;
+		text-transform: uppercase;
+		color: #1e3a8a;
+	}
+
+	.hero-image-container img {
+		max-width: 100%;
+		height: auto;
+		animation: float 4s ease-in-out infinite;
+		filter: drop-shadow(0 20px 30px rgba(0,0,0,0.2));
+	}
+
+	@@keyframes float {
+		0%, 100% {
+			transform: translateY(0px);
+		}
+
+		50% {
+			transform: translateY(-20px);
+		}
+	}
+
+	.wave-container {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		z-index: 10;
+		pointer-events: none;
+	}
+
+	.swiper-pagination-bullet {
+		background: white !important;
+	}
+
+	/* --- Stats Boxes --- */
+	.stats-container {
+		position: absolute;
+		bottom: 40px;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 30;
+		width: 95%;
+		max-width: 1100px;
+		display: flex !important;
+		justify-content: center;
+		gap: 30px;
+		flex-wrap: wrap;
+	}
+
+	.stat-box-rect {
+		background: white;
+		border-radius: 20px;
+		flex: 1;
+		min-width: 250px;
+		max-width: 320px;
+		height: 160px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		padding: 20px;
+		box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+		text-decoration: none !important;
+		transition: all 0.3s ease;
+	}
+
+		.stat-box-rect:hover {
+			transform: translateY(-12px);
+			background-color: #f9f9f9;
+			box-shadow: 0 25px 50px rgba(0,0,0,0.18);
+		}
+
+	.stat-content i {
+		font-size: 2rem;
+		color: #1e3a8a;
+		margin-bottom: 15px;
+		display: block;
+	}
+
+	.stat-content h2 {
+		font-size: 30px;
+		font-weight: 700;
+		color: #1e3a8a;
+		margin: 0;
+	}
+
+	/* --- Pet Categories --- */
+	.container-wrapper {
+		width: 100%;
+		padding: 40px 0 60px 0;
+		background-color: #fff;
+	}
+
+	.pet-container {
+		display: flex;
+		justify-content: center;
+		gap: 20px;
+		max-width: 1400px;
+		margin: 110px auto 0 auto;
+	}
+
+	.pet-card {
+		text-align: center;
+		width: 260px;
+	}
+
+	.img-wrapper {
+		width: 113%;
+		height: 130px;
+		border-radius: 15px;
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+		margin-bottom: 15px;
+	}
+
+		.img-wrapper img {
+			height: 151px;
+			position: relative;
+			z-index: 5;
+		}
+
+	.img-cat {
+		width: 119px;
+	}
+
+	.img-dog {
+		width: 149px;
+	}
+
+	.img-small-pet, .img-fish, .img-bird {
+		width: 214px;
+	}
+
+	.pet-label {
+		font-weight: 600;
+		font-size: 1.1rem;
+		color: #333;
+		display: block;
+		margin-top: 5px;
+		transition: 0.2s;
+	}
+
+	.pet-card:hover .pet-label {
+		text-decoration: underline !important;
+		color: #000;
+	}
+
+	.bg-soft-yellow {
+		background-color: #fef4cd !important;
+	}
+
+	.bg-soft-blue {
+		background-color: #d8f0f9 !important;
+	}
+
+	.bg-vibrant-green {
+		background-color: #c9e8a5 !important;
+	}
+
+	.bg-soft-gray {
+		background-color: #f0f0f0 !important;
+	}
+
+	.bg-soft-pink {
+		background-color: #fce1e8 !important;
+	}
+
+	/* --- Product Cards (Swiper) --- */
+	.productsSwiper .card {
+		border-radius: 20px;
+		transition: transform 0.3s;
+		height: 100%;
+	}
+
+		.productsSwiper .card:hover {
+			transform: translateY(-5px);
+		}
+
+	.product-image-wrapper {
+		height: 250px !important;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 20px;
+	}
+
+		.product-image-wrapper img {
+			max-height: 200px !important;
+			object-fit: contain;
+			transition: transform 0.3s ease;
+		}
+
+	.productsSwiper .card:hover img {
+		transform: scale(1.05);
+	}
+
+	.card-title {
+		font-size: 1.0rem !important;
+		font-weight: 700;
+		color: #333;
+		text-align: center;
+	}
+
+	
+
+	.productsSwiper .card h4 {
+		text-align: center;
+		font-weight: 700;
+		color: #1e3a8a;
+		margin-top: auto; 
+	}
+
+
+	.productsSwiper .card .d-flex {
+		justify-content: center;
+	}
+
+	.productsSwiper .card .add-to-cart-btn {
+		display: block;
+		margin: 10px auto 0;
+		background-color: #15406b;
+		padding: 8px 20px;
+		border-radius: 10px;
+	}
+
+	.price-action-wrapper {
+		text-align: center;
+		margin-top: auto;
+	}
+
+	.price-text {
+		font-weight: 700;
+		color: #1e3a8a;
+		margin-bottom: 8px;
+	}
+
+	.add-to-cart-btn {
+		background-color: #15406b;
+		padding: 8px 18px;
+		border-radius: 10px;
+	}
+
+
+	/* --- Filters --- */
+	.filter-button {
+		background: transparent;
+		border: 1px solid rgba(30, 58, 138, 0.2);
+		padding: 6px 18px;
+		border-radius: 30px;
+		font-weight: 600;
+		transition: all 0.3s ease;
+		color: #444;
+		font-size: 0.8rem;
+	}
+
+		.filter-button.active, .filter-button:hover {
+			background: #1e3a8a !important;
+			color: white !important;
+			border-color: #1e3a8a !important;
+		}
+
+	/* --- Navigation Buttons --- */
+	.custom-nav-btn {
+		color: #1e3a8a;
+		width: 44px;
+		height: 44px;
+		background: white;
+		border-radius: 50%;
+		box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+	}
+
+		.custom-nav-btn::after {
+			font-size: 18px !important;
+			font-weight: bold;
+		}
+
+	.swiper-button-prev.custom-nav-btn {
+		left: -50px;
+	}
+
+	.swiper-button-next.custom-nav-btn {
+		right: -50px;
+	}
+
+	/* --- Offer Cards --- */
+
+	.offersSwiper {
+		padding: 0 5% 50px 5% !important;
+	}
+
+	.offer-card {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		height: 220px !important;
+		padding: 20px 25px !important; 
+		border-radius: 20px;
+		gap: 15px; 
+		overflow: hidden;
+	}
+
+	.offer-content {
+		flex: 1.5; 
+		text-align: left;
+		z-index: 2;
+		min-width: 0; 
+	}
+
+	.offer-title {
+		font-size: 1.5rem !important; 
+		font-weight: 300;
+		line-height: 1.1;
+		margin: 0;
+		color: #333;
+		word-wrap: break-word;
+		white-space: normal;
+	}
+
+	.offer-image-box {
+		flex: 1;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		height: 100%;
+	}
+
+		.offer-image-box img {
+			max-height: 150px !important;
+			width: auto;
+			object-fit: contain;
+		}
+
+	/* --- Brands Carousel --- */
+	.carousel-wrapper {
+		position: relative;
+		display: flex;
+		align-items: center;
+		max-width: 1250px;
+		margin: 0 auto;
+		padding: 0 20px;
+	}
+
+	.scroll-box {
+		display: flex;
+		overflow-x: hidden;
+		scroll-behavior: smooth;
+		gap: 80px;
+		padding: 40px 35px !important;
+		align-items: center;
+		width: 100%;
+	}
+
+	.logo-item {
+		flex: 0 0 auto;
+		height: 100px;
+		width: 140px;
+		transition: transform 0.3s;
+	}
+
+		.logo-item:hover {
+			transform: translateY(-5px);
+		}
+
+		.logo-item img {
+			max-width: 80%;
+			max-height: 80%;
+			object-fit: contain;
+		}
+
+	/*	BRANDS SECTION  */
+
+	.brands-section-final {
+		padding: 60px 0;
+		position: relative;
+		background-color: #fff;
+	}
+
+	.carousel-wrapper {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		max-width: 1300px; 
+		margin: 0 auto;
+		padding: 0 100px;
+		z-index: 1;
+	}
+
+	.scroll-box {
+		display: flex;
+		overflow-x: hidden;
+		scroll-behavior: smooth;
+		gap: 80px;
+		padding: 40px 0;
+		align-items: center;
+		width: 100%;
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+
+		.scroll-box::-webkit-scrollbar {
+			display: none;
+		}
+
+	.nav-btn {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		background-color: #fff;
+		border: none;
+		width: 50px;
+		height: 50px;
+		border-radius: 50%;
+		box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+		cursor: pointer;
+		z-index: 100;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.5rem;
+		transition: all 0.3s ease;
+	}
+
+		.nav-btn:hover {
+			background-color: #f8f9fa;
+			box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+			transform: translateY(-50%) scale(1.1);
+		}
+
+		.nav-btn.left {
+			left: 20px; 
+		}
+
+		.nav-btn.right {
+			right: 20px; 
+		}
+
+	.logo-item {
+		flex: 0 0 auto;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100px;
+		width: 140px;
+		text-decoration: none;
+		transition: transform 0.3s ease;
+	}
+
+		.logo-item:hover {
+			transform: translateY(-5px);
+		}
+
+		.logo-item img {
+			max-width: 90%;
+			max-height: 90%;
+			object-fit: contain;
+			display: block;
+		}
+
+	.b-royal {
+		transform: scale(1.7);
+	}
+
+	.b-montego {
+		transform: scale(1.2);
+	}
+
+	.b-taste {
+		transform: scale(1.2);
+	}
+
+	.b-monge {
+		transform: scale(1.2);
+	}
+
+	.b-devo {
+		transform: scale(1.2);
+	}
+
+	.b-bewi {
+		transform: scale(1.9);
+	}
+
+	.b-kiki {
+		transform: scale(2.1);
+	}
+
+	.b-harrison {
+		transform: scale(1.7);
+	}
+
+	.b-henrys {
+		transform: scale(1.4);
+	}
+
+	.b-tetra {
+		transform: scale(1.3);
+	}
+
+	@@media (max-width: 768px) {
+		.carousel-wrapper {
+			padding: 0 50px;
+		}
+
+		.nav-btn {
+			width: 35px;
+			height: 35px;
+			font-size: 1.1rem;
+		}
+
+			.nav-btn.left {
+				left: 5px;
+			}
+
+			.nav-btn.right {
+				right: 5px;
+			}
+
+		.scroll-box {
+			gap: 40px;
+		}
+	}
+	/* --- Utility / Small Cards --- */
+	.img-style {
+		width: 120px;
+		height: 100%;
+		bottom: 0;
+		right: 0;
+		object-fit: cover;
+		position: absolute;
+	}
+
+	.card-text {
+		width: calc(100% - 120px);
+	}
+
+	/* --- Responsive Fixes --- */
+	@@media (max-width: 991px) {
+		.hero-content {
+			text-align: center;
+			padding-left: 0;
+		}
+
+		.hero-title-main {
+			font-size: 3rem;
+		}
+
+		.stats-container {
+			position: relative;
+			bottom: 0;
+			transform: none;
+			left: 0;
+			flex-direction: column;
+			padding: 50px 20px;
+		}
+
+		.stat-box-rect {
+			width: 100%;
+			max-width: none;
+		}
+
+		.nav-btn, .custom-nav-btn {
+			display: none;
+		}
+
+		.scroll-box {
+			overflow-x: auto;
+			gap: 50px;
+		}
+	}
+
+
+	.img-style {
+		width: 120px;
+		height: 100%;
+		bottom: 0;
+		right: 0;
+		object-fit: cover;
+		position: absolute;
+	}
+
+	.card-text {
+		width: calc(100% - 120px);
+	}
+
+	/* --- Responsive Fixes --- */
+	@@media (max-width: 991px) {
+		.hero-content {
+			text-align: center;
+			padding-left: 0;
+		}
+
+		.hero-title-main {
+			font-size: 3rem;
+		}
+
+		.stats-container {
+			position: relative;
+			bottom: 0;
+			transform: none;
+			left: 0;
+			flex-direction: column;
+			padding: 50px 20px;
+		}
+
+		.stat-box-rect {
+			width: 100%;
+			max-width: none;
+		}
+
+		.nav-btn, .custom-nav-btn {
+			display: none;
+		}
+
+		.scroll-box {
+			overflow-x: auto;
+			gap: 50px;
+		}
+	}
+
+	/* Fix for Stats Icons (Care, Adoption, Shopping) */
+	.stat-content i {
+		font-family: "Font Awesome 6 Free" !important;
+		font-weight: 900 !important;
+		font-size: 2.5rem; 
+		color: #1e3a8a;
+		margin-bottom: 15px;
+		display: inline-block;
+	}
+
+	.stats-container {
+		display: flex !important;
+		visibility: visible !important;
+		opacity: 1 !important;
+	}
+
+	.stat-content i {
+		font-family: "Font Awesome 6 Free" !important;
+		font-weight: 900 !important; 
+		font-size: 2.5rem;
+		color: #1e3a8a;
+		margin-bottom: 15px;
+		display: block;
+	}
+
+
+	/* Fix for Beyond the Logo */
+	.brands-section-final {
+		padding: 60px 0;
+		background: #fff;
+	}
+
+	.carousel-wrapper {
+		position: relative;
+		max-width: 1250px;
+		margin: 0 auto;
+		padding: 0 33px;
+	}
+
+	.scroll-box {
+		display: flex;
+		overflow-x: hidden;
+		scroll-behavior: smooth;
+		gap: 80px;
+		padding: 40px 10px;
+		align-items: center;
+		width: 100%;
+	}
+
+	.nav-btn {
+		background: white;
+		border: 1px solid #eee;
+		border-radius: 50%;
+		width: 50px;
+		height: 50px;
+		cursor: pointer;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		z-index: 100;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+		transition: all 0.3s ease;
+	}
+
+		.nav-btn.left {
+			left: 10px; 
+		}
+
+		.nav-btn.right {
+			right: 10px; 
+		}
+
+		.nav-btn:hover {
+			background: #fdfdfd;
+			transform: translateY(-50%) scale(1.1);
+			box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+		}
+
+	/* Mobile Adjustments for Logos */
+	@@media (max-width: 768px) {
+		.carousel-wrapper {
+			padding: 0 50px; 
+		}
+
+		.scroll-box {
+			overflow-x: auto; 
+			gap: 40px;
+		}
+
+		.nav-btn {
+			display: none;
+		}
+	}
+
+	.main-title {
+		font-family: 'Segoe UI', Arial, sans-serif;
+		font-size: 40px;
+		font-weight: 500;
+		color: #333;
+		text-align: left;
+		max-width: 1250px;
+		margin: 30px auto 10px auto;
+		padding-left: 0;
+	}
+
+	/* --- HERO & STATS ICONS FIX --- */
+	.hero-section {
+		position: relative;
+		min-height: 100vh;
+		background-image: linear-gradient(rgba(224, 242, 254, 0.7), rgba(224, 242, 254, 0.7)), url('/images/main3.png');
+		background-size: cover;
+		background-position: center;
+		background-attachment: fixed;
+		display: flex;
+		align-items: center;
+		overflow: hidden;
+	}
+
+	.stat-content i {
+		font-family: "Font Awesome 6 Free" !important;
+		font-weight: 900 !important;
+		font-size: 2.5rem;
+		color: #1e3a8a;
+		margin-bottom: 15px;
+		display: block;
+	}
+
+	/* --- SPECIAL OFFERS FIX --- */
+	.offersSwiper {
+		padding: 20px 5% 60px 5% !important; 
+		width: 100%;
+	}
+
+	.offer-card {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		height: 220px !important; 
+		padding: 20px 30px !important;
+		border-radius: 20px;
+		border: none;
+		position: relative;
+		overflow: hidden;
+		transition: background-color 0.3s ease;
+	}
+
+		.offer-card:hover {
+			background-color: #d1e9f2 !important; 
+		}
+
+	.offer-content {
+		flex: 1;
+		text-align: left;
+		z-index: 2;
+	}
+
+	.offer-subtitle {
+		font-size: 1.1rem !important;
+		margin-bottom: 5px !important;
+		font-weight: 600;
+		color: #1e3a8a;
+	}
+
+	.offer-title {
+		font-size: 1.2rem !important;
+		font-weight: 900;
+		line-height: 1.2;
+		max-width: 250px;
+		margin: 0;
+		color: #333;
+	}
+
+	.offer-image-box {
+		flex: 1;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		height: 100%;
+	}
+
+		.offer-image-box img {
+			max-height: 180px !important;
+			width: auto;
+			object-fit: contain;
+			transition: none !important;
+		}
+
+
+
+
+	/* --- BEYOND THE LOGO FIX --- */
+	.carousel-wrapper {
+		position: relative;
+		max-width: 1250px;
+		margin: 0 auto;
+		padding: 0 2px; 
+	}
+
+	.scroll-box {
+		display: flex;
+		overflow-x: hidden;
+		scroll-behavior: smooth;
+		gap: 78px;
+		padding: 40px 10px;
+		align-items: center;
+		width: 100%;
+	}
+
+	.nav-btn {
+		background: white;
+		border: 1px solid #eee;
+		border-radius: 50%;
+		width: 50px;
+		height: 50px;
+		cursor: pointer;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		z-index: 100;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+		transition: all 0.3s ease;
+	}
+
+		.nav-btn.left {
+			left: 0px;
+		}
+
+		.nav-btn.right {
+			right: 0px;
+		}
+
+
+		.nav-btn:hover {
+			background: #fdfdfd;
+			transform: translateY(-50%) scale(1.1);
+			box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+
+		}
+
+
+
+	/* --- PRODUCT CARDS  --- */
+	.productsSwiper .card {
+		border-radius: 20px;
+		overflow: hidden;
+		border: 1px solid #f0f0f0 !important;
+	}
+
+	.product-image-wrapper {
+		height: 220px !important;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 20px;
+	}
+
+		.product-image-wrapper img {
+			max-height: 180px !important;
+			transform: scale(1);
+			transition: transform 0.3s ease;
+		}
+
+	.productsSwiper .card:hover img {
+		transform: scale(1.05);
+	}
+
+	/* --- Mobile Adjustments --- */
+	@@media (max-width: 768px) {
+		.offer-card {
+			flex-direction: column;
+			height: auto !important;
+			text-align: center;
+		}
+
+		.offer-content {
+			text-align: center;
+			margin-bottom: 15px;
+		}
+
+		.offer-image-box {
+			justify-content: center;
+		}
+
+		.carousel-wrapper {
+			padding: 0 20px;
+		}
+
+		.nav-btn {
+			display: none;
+		}
+
+		.scroll-box {
+			overflow-x: auto;
+		}
+	}
+
+
+	
+
+ 
+	.pet-container {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: 24px;
+		justify-items: center; 
+	}
+
+	.pet-card {
+		width: 180px; 
+	}
+
+	@@media (max-width: 992px) {
+		.pet-container
+
+	{
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	}
+
+	@@media (max-width: 576px) {
+		.pet-container
+
+	{
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.pet-card {
+		width: 150px;
+	}
+
+	}
+	 
+		</style>
+
+
+@* banner *@
+<section class="hero-section">
+	<div class="swiper main-swiper">
+		<div class="swiper-wrapper">
+
+			<div class="swiper-slide">
+				<div class="container">
+					<div class="row align-items-center">
+						<div class="col-lg-6 hero-content">
+							<h4 class="hero-title-small">Your Pet</h4>
+							<h1 class="hero-title-main">Our Priority</h1>
+
+
+						</div>
+						<div class="col-lg-6 hero-image-container text-center">
+							<img src="/images/main7.png" alt="Pet 1" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="swiper-slide">
+				<div class="container">
+					<div class="row align-items-center">
+						<div class="col-lg-6 hero-content">
+							<h4 class="hero-title-small">Best Care</h4>
+							<h1 class="hero-title-main">Happy Paws</h1>
+
+
+						</div>
+						<div class="col-lg-6 hero-image-container text-center">
+							<img src="/images/main6.png" alt="Pet 2" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="swiper-pagination"></div>
+	</div>
+
+	<div class="wave-container">
+		<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+			<path fill="#ffffff" d="M0,224L60,213.3C120,203,240,181,360,181.3C480,181,600,203,720,213.3C840,224,960,224,1080,202.7C1200,181,1320,139,1440,96L1440,320L0,320Z"></path>
+		</svg>
+	</div>
+
+	<div class="stats-container container">
+		<div class="row g-5 justify-content-center">
+			<div class="stats-container">
+				<a href="~/ShopProduct/ShopProduct" class="stat-box-rect">
+					<div class="stat-content">
+						<i class="fa-solid fa-basket-shopping"></i>
+						<h2 style="font-size:30px;">Shopping</h2>
+					</div>
+				</a>
+				<a href="~/AdoptPet/Adopt" class="stat-box-rect">
+					<div class="stat-content">
+						<i class="fas fa-hand-holding-heart"></i>
+						<h2 class="long-text">Adoption</h2>
+					</div>
+				</a>
+				<a href="~/Care/PetCare" class="stat-box-rect">
+					<div class="stat-content">
+						<i class="fa-solid fa-house-chimney-medical"></i>
+						<h2>Care</h2>
+					</div>
+				</a>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+
+
+@* Pet Essentials *@
+<section class="my-3 pt-3">
+	<div class="container py-5">
+
+		<div class="section-header d-md-flex justify-content-between align-items-center mb-5 main-title">
+			<h2 class="display-5 fw-normal ">
+				Pet Essentials
+			</h2>
+		</div>
+		<div class="pet-container">
+
+			<div class="pet-card">
+				<a asp-controller="CategoryPet" asp-action="PetTypeCategories" asp-route-petName="Cat" class="text-decoration-none pet-link">
+					<div class="img-wrapper bg-soft-yellow">
+						<img src="~/images/CatIcon.png" alt="Cat" class="img-cat">
+					</div>
+					<span class="pet-label">Cat</span>
+				</a>
+			</div>
+
+			<div class="pet-card">
+				<a asp-controller="CategoryPet" asp-action="PetTypeCategories" asp-route-petName="Dog" class="text-decoration-none pet-link">
+					<div class="img-wrapper bg-soft-blue">
+						<img src="~/images/DogIcon.png" alt="Dog" class="img-dog">
+					</div>
+					<span class="pet-label">Dog</span>
+				</a>
+			</div>
+
+			<div class="pet-card">
+				<a asp-controller="CategoryPet" asp-action="PetTypeCategories" asp-route-petName="Small Pets" class="text-decoration-none pet-link">
+					<div class="img-wrapper bg-vibrant-green">
+						<img src="~/images/SmallPetIcon.png" alt="Small Pet" class="img-small-pet">
+					</div>
+					<span class="pet-label">Small Pet</span>
+				</a>
+			</div>
+
+			<div class="pet-card">
+				<a asp-controller="CategoryPet" asp-action="PetTypeCategories" asp-route-petName="Fish" class="text-decoration-none pet-link">
+					<div class="img-wrapper bg-soft-gray">
+						<img src="~/images/FishIcon.png" alt="Fish" class="img-fish">
+					</div>
+					<span class="pet-label">Fish</span>
+				</a>
+			</div>
+
+			<div class="pet-card">
+				<a asp-controller="CategoryPet" asp-action="PetTypeCategories" asp-route-petName="Bird" class="text-decoration-none pet-link">
+					<div class="img-wrapper bg-soft-pink">
+						<img src="~/images/BirdIcon.png" alt="Bird" class="img-bird">
+					</div>
+					<span class="pet-label">Bird</span>
+				</a>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+
+@* Best selling products *@
+<section id="foodies" class="my-3 pt-3">
+	<div class="container py-5">
+		<div class="section-header d-md-flex justify-content-between align-items-center mb-5 main-title">
+			<h2 class="display-5 fw-normal ">Best Selling</h2>
+
+			<div id="best-seller-filters" class="mb-4 mb-md-0">
+				<p class="m-0 filter-group">
+					<button class="filter-button active" data-filter="*">ALL</button>
+					<button class="filter-button" data-filter=".Cat">Cat</button>
+					<button class="filter-button" data-filter=".Dog">Dog</button>
+					<button class="filter-button" data-filter=".Fish">Fish</button>
+					<button class="filter-button" data-filter=".Bird">Bird</button>
+					<button class="filter-button" data-filter=".SmallPets">Small Pets</button>
+				</p>
+			</div>
+		</div>
+
+		<div class="position-relative">
+			<div class="swiper productsSwiper px-2">
+				<div class="swiper-wrapper">
+					@if (bestSellers != null && bestSellers.Any())
+					{
+						@foreach (var item in bestSellers)
+						{
+							string petClass = item.PetTypeId switch
+							{
+								1 => "Cat",
+								2 => "Dog",
+								3 => "Fish",
+								4 => "Bird",
+								5 => "SmallPets",
+								_ => "other"
+							};
+							<div class="swiper-slide item @petClass">
+								<div class="card h-100 position-relative border-0 shadow-sm" style="border-radius:20px; overflow:hidden;">
+									<div class="product-image-wrapper p-3 d-flex align-items-center justify-content-center" style="height:200px;">
+										<img src="@Url.Content(item.Note)" class="img-fluid" style="max-height:160px; object-fit:contain;" />
+									</div>
+									<div class="card-body p-3 d-flex flex-column justify-content-between mt-auto">
+										<h3 title="@item.Name" class="card-title fs-6 m-0 text-capitalize fw-bold">@(item.Name.Length > 15 ? item.Name.Substring(0, 15) + ".." : item.Name)</h3>
+										<h4 class="secondary-font mt-2" style="font-weight:700; color: #1e3a8a;">@item.Price JD</h4>
+										<div class="d-flex flex-wrap mt-3">
+											<button class="btn text-white add-to-cart-btn"
+													style="background-color: #15406b;"
+													data-product-id="@item.ShopProductId">
+												Add to cart
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						}
+					}
+				</div>
+			</div>
+
+			<div class="swiper-button-next custom-nav-btn"></div>
+			<div class="swiper-button-prev custom-nav-btn"></div>
+		</div>
+	</div>
+</section>
+
+
+
+@* Ad Section *@
+<div class="container my-5 ad-container" style="border-radius:30px; overflow:hidden;">
+	<img src="~/images/CareAd5.jpg" style="width:100%; display:block; border-radius: 16px;" />
+</div>
+
+
+@* New Arrivals *@
+@* --- NEW ARRIVALS SECTION (Last 3 per Pet) --- *@
+<section id="new-products" class="my-3 pt-3">
+	<div class="container  py-5 ">
+		<div class="section-header d-md-flex justify-content-between align-items-center mb-5 main-title">
+			<h2 class="display-5 fw-normal">New Arrivals</h2>
+			<div class="mb-4 mb-md-0">
+				<p class="m-0 filter-group">
+					<button class="filter-button active" data-filter="*">ALL</button>
+					<button class="filter-button" data-filter=".Cat">Cat</button>
+					<button class="filter-button" data-filter=".Dog">Dog</button>
+					<button class="filter-button" data-filter=".Fish">Fish</button>
+					<button class="filter-button" data-filter=".Bird">Bird</button>
+					<button class="filter-button" data-filter=".SmallPets">Small Pets</button>
+				</p>
+			</div>
+		</div>
+
+		<div class="position-relative">
+			<div class="swiper productsSwiper px-2">
+				<div class="swiper-wrapper">
+					@if (Model != null && Model.Any())
+					{
+						@foreach (var item in Model)
+						{
+							string petClass = item.PetTypeId switch
+							{
+								1 => "Cat",
+								2 => "Dog",
+								3 => "Fish",
+								4 => "Bird",
+								5 => "SmallPets",
+								_ => "other"
+							};
+
+							<div class="swiper-slide item @petClass">
+								<div class="card h-100 position-relative border-0 shadow-sm" style="border-radius:20px; overflow:hidden;">
+									<div class="product-image-wrapper p-3 d-flex align-items-center justify-content-center" style="height:200px;">
+										<a href="#">
+											<img src="@Url.Content(item.Note)"
+												 class="img-fluid"
+												 alt="@(item.Name ?? "Product")"
+												 style="max-height: 160px; object-fit: contain;" />
+										</a>
+									</div>
+									<div class="card-body p-3 d-flex flex-column justify-content-between mt-auto">
+										<div class="card-body p-3 d-flex flex-column justify-content-between mt-auto">
+											<h3 title="@item.Name" class="card-title fs-6 m-0 text-capitalize fw-bold">@(item.Name.Length > 15 ? item.Name.Substring(0, 15) + ".." : item.Name)</h3>
+											<h4 class="secondary-font mt-2" style="font-weight:700; color: #1e3a8a;">@item.Price JD</h4>
+											<div class="d-flex flex-wrap mt-3">
+												<button class="btn text-white add-to-cart-btn"
+														style="background-color: #15406b;"
+														data-product-id="@item.ShopProductId">
+													Add to cart
+												</button>
+											</div>
+										</div>
+
+
+									</div>
+								</div>
+							</div>
+						}
+					}
+				</div>
+			</div>
+			<div class="swiper-button-next custom-nav-btn"></div>
+			<div class="swiper-button-prev custom-nav-btn"></div>
+		</div>
+	</div>
+</section>
+
+
+
+
+@* haneen code *@
+@* big cat *@
+<section class="my-3 pt-3">
+	<div class="container  py-5 ">
+		<div class="card p-4 rounded-4  mb-4   shadow-sm border-0" style="min-height: 200px; overflow: hidden;  background-color: #fef4cd !important;">
+			<div class="row align-items-center g-0">
+				@*g-0 removes spacing between columns. *@
+				@* Text warning Cat *@
+				<div class="col-8">
+					<p class="mb-0 fs-5 text-dark ">Everything for</p>  @*fs --> font size *@
+					<h1 class="display-3 fw-bolder text-dark ">Cats</h1>  @* display-3 fw-bolder --> make the "Cats" bigger *@
+				</div>
+				@* warning cat image *@
+				<div class="col-4 text-end">
+					@* text-end --> mage align to the right side *@
+					<img src="~/images/cat.png" style="display: block; height: 200px; width: auto; margin-bottom: -24px; object-fit: cover;" alt=" cat ">
+				</div>
+			</div>
+		</div>
+
+		@* grid of 3 *@
+
+		<div class="row g-4">
+
+			<!-- Card 1 -->
+			<div class="col-md-4">
+				<a asp-controller="ShopProduct"
+				   asp-action="ShopProduct"
+				   asp-route-petTypeId="1"
+				   asp-route-search="food"
+				   class="text-decoration-none d-block">
+					<div class="card rounded-4 shadow-sm border-0 position-relative overflow-hidden" style="min-height: 150px; background-color: #d8f0f9 !important;">
+						<div class="card-body d-flex flex-column justify-content-between h-100">
+							<p class="fw-bold fs-6 text-dark mb-0 card-text">Cat treats and snacks</p>
+							<img src="~/images/cat3.png" class="img-fluid position-absolute img-style" alt="Cat Food">
+						</div>
+					</div>
+				</a>
+			</div>
+
+			<!-- Card 2 -->
+			<div class="col-md-4">
+				<a asp-controller="ShopProduct"
+				   asp-action="ShopProduct"
+				   asp-route-petTypeId="1"
+				   asp-route-search="litter"
+				   class="text-decoration-none d-block">
+					<div class="card rounded-4 shadow-sm border-0 position-relative overflow-hidden" style="min-height: 150px; background-color: #fce1e8 !important;">
+						<div class="card-body d-flex flex-column justify-content-between h-100">
+							<p class="fw-bold fs-6 text-dark mb-0 card-text">Cat litter and trays</p>
+							<img src="~/images/cat4.png" class="img-fluid position-absolute img-style" alt="Cat Litter">
+						</div>
+					</div>
+				</a>
+			</div>
+			<!-- Card 3 -->
+			<div class="col-md-4">
+				<a asp-controller="ShopProduct"
+				   asp-action="ShopProduct"
+				   asp-route-petTypeId="1"
+				   asp-route-search="Toys"
+				   class="text-decoration-none d-block">
+					<div class="card rounded-4 shadow-sm border-0 position-relative overflow-hidden" style="min-height: 150px; background-color: #f0f0f0 !important;">
+						<div class="card-body d-flex flex-column justify-content-between h-100">
+							<p class="fw-bold fs-6 text-dark mb-0 card-text">Cat Toys</p>
+							<img src="~/images/cat5.png" class="img-fluid position-absolute img-style" alt="Cat Litter">
+						</div>
+					</div>
+				</a>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+@* brands *@
+<section class="brands-section-final">
+	<div class="container">
+		<h2 class="main-title">Beyond the logo</h2>
+
+		<div class="carousel-wrapper">
+			<button class="swiper-button-prev custom-nav-btn" onclick="sideScroll(-1)"></button>
+			<div class="scroll-box" id="scrollBox">
+				@{
+					var brands = new List<(int Id, string Image, string Class)>
+								{
+								(1, "RoyalCanin.png", "b-royal"),
+								(2, "TasteOfTheWild.png", "b-taste"),
+								(3, "Monge.png", "b-monge"),
+								(4, "BewiCat.png", "b-bewi"),
+								(5, "Montego.png", "b-montego"),
+								(6, "Henrys.png", "b-henrys"),
+								(7, "Devo.png", "b-devo"),
+								(8, "Tetra.png", "b-tetra"),
+								(9, "Harrison's.png", "b-harrison"),
+								(10, "KikiEx.png", "b-kiki"),
+								};
+				}
+
+				@foreach (var brand in brands)
+				{
+					<a href="/ShopProduct/ShopProduct?brandId=@brand.Id" class="logo-item">
+						<img src="/images/@brand.Image" class="@brand.Class" alt="brand" />
+					</a>
+				}
+			</div>
+
+
+			<button class="swiper-button-next custom-nav-btn" onclick="sideScroll(1)"></button>
+
+		</div>
+	</div>
+</section>
+
+
+
+@* haneen code  *@
+@* big dog  *@
+<div style="margin-bottom:181px;" class="container">
+	<div class="card p-4 rounded-4  mb-4  bg-opacity-25 shadow-sm border-0" style="min-height: 200px; overflow: hidden;    background-color: #c9e8a5 !important;">
+		<div class="row align-items-center g-0">
+			@* Text warning Dog *@
+			<div class="col-8">
+				<p class="mb-0 fs-5 text-dark ">Everything for</p>  
+				<h1 class="display-3 fw-bolder text-dark ">Dogs</h1>  
+			</div>
+			@* warning Dog image *@
+			<div class="col-4 text-end">
+				<img src="~/images/dog.png" style="display: block; height: 200px; width: auto; margin-bottom: -24px; object-fit: cover;" alt=" cat ">
+			</div>
+		</div>
+	</div>
+
+	@* grid of 3 *@
+
+
+	<div class="row g-4">
+
+		<!-- Card 1 -->
+		<div class="col-md-4">
+			<a asp-controller="ShopProduct"
+			   asp-action="ShopProduct"
+			   asp-route-petTypeId="2"
+			   asp-route-search="treats"
+			   class="text-decoration-none d-block">
+				<div class="card rounded-4 shadow-sm border-0 position-relative overflow-hidden" style="min-height: 150px; background-color: #d8f0f9 !important;">
+					<div class="card-body d-flex flex-column justify-content-between h-100">
+						<p class="fw-bold fs-6 text-dark mb-0 card-text">Dog treats and snacks</p>
+						<img src="~/images/dog1.png" class="img-fluid position-absolute img-style" alt="Dog">
+					</div>
+				</div>
+			</a>
+		</div>
+
+		<!-- Card 2 -->
+		<div class="col-md-4">
+			<a asp-controller="ShopProduct"
+			   asp-action="ShopProduct"
+			   asp-route-petTypeId="2"
+			   asp-route-search="litter"
+			   class="text-decoration-none d-block">
+				<div class="card rounded-4 shadow-sm border-0 position-relative overflow-hidden" style="min-height: 150px; background-color: #fce1e8 !important;">
+					<div class="card-body d-flex flex-column justify-content-between h-100">
+						<p class="fw-bold fs-6 text-dark mb-0 card-text">Dog litter boxes and litter trays</p>
+						<img src="~/images/dog2.png" class="img-fluid position-absolute img-style" alt="Dog">
+					</div>
+				</div>
+			</a>
+		</div>
+
+		<!-- Card 3 -->
+		<div class="col-md-4">
+			<a asp-controller="ShopProduct"
+			   asp-action="ShopProduct"
+			   asp-route-petTypeId="2"
+			   asp-route-search="toys"
+			   class="text-decoration-none d-block">
+				<div class="card rounded-4 shadow-sm border-0 position-relative overflow-hidden" style="min-height: 150px; background-color: #fef4cd !important;">
+					<div class="card-body d-flex flex-column justify-content-between h-100">
+						<p class="fw-bold fs-6 text-dark mb-0 card-text">Dog toys</p>
+						<img src="~/images/dog5.png" class="img-fluid position-absolute img-style" alt="Dog">
+					</div>
+				</div>
+			</a>
+		</div>
+
+	</div>
+
+</div>
+
+
+
+@* AD *@
+<div class="container" style="overflow: hidden; margin-top: -81px;">
+	<img src="~/images/AdoptionAd2.jpg" style="border-radius: 16px;" />
+</div>
+
+
+@* Special Offers *@
+<section class="py-5">
+	<div class="container-fluid main-title">
+		<p style="padding-left: 70px;">Special Offers</p>
+
+		<div class="swiper offersSwiper pb-5">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide">
+					<div class="offer-card" style="background-color:  #d8f0f9;">
+						<div class="offer-content">
+							<p class="offer-subtitle">Economy packs.</p>
+							<h4 class="offer-title">BUY MORE, SAVE MORE!</h4>
+							<p class="offer-description-data" style="display: none;">
+								Upgrade your lifestyle with our Premium Economy bundle. This pack includes our top-rated products at a fraction of the original price. Experience quality without breaking the bank!
+							</p>
+						</div>
+						<div class="offer-image-box">
+							<img src="/images/offers1.png" alt="offer">
+						</div>
+					</div>
+				</div>
+
+
+				<div class="swiper-slide">
+					<div class="offer-card" style="background-color:  #d8f0f9;">
+						<div class="offer-content">
+							<p class="offer-subtitle">Economy packs.</p>
+							<h3 class="offer-title">BUY MORE, SAVE MORE!</h3>
+							<p class="offer-description-data" style="display: none;">
+								Treat your best friend to the healthy snack they deserve! Our **Peanut Butter & Banana Bites** are 100% natural and packed with nutrients.
+
+								**Why your buddy will love it:**
+								• All-natural ingredients with no artificial additives.
+								• Supports healthy skin and joint mobility.
+								• Perfect for training or just showing some love.
+
+								Grab our **Economy Pack (90 treats)** today and save more while keeping your dog happy and healthy!
+							</p>
+						</div>
+						<div class="offer-image-box">
+							<img src="/images/offers2.png" alt="offer">
+
+						</div>
+					</div>
+				</div>
+
+				<div class="swiper-slide">
+					<div class="offer-card" style="background-color:  #d8f0f9;">
+						<div class="offer-content">
+							<p class="offer-subtitle">Economy packs.</p>
+							<h3 class="offer-title">BUY MORE, SAVE MORE!</h3>
+						</div>
+						<div class="offer-image-box">
+							<img src="/images/offers3.png" alt="offer">
+
+
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="offer-card" style="background-color:   #d8f0f9;">
+						<div class="offer-content">
+							<p class="offer-subtitle">Economy packs.</p>
+							<h3 class="offer-title">BUY MORE, SAVE MORE!</h3>
+						</div>
+						<div class="offer-image-box">
+							<img src="/images/offers4.png" alt="offer">
+
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="offer-card" style="background-color:   #d8f0f9;">
+						<div class="offer-content">
+							<p class="offer-subtitle">Economy packs.</p>
+							<h3 class="offer-title">BUY MORE, SAVE MORE!</h3>
+						</div>
+						<div class="offer-image-box">
+							<img src="/images/offers5.png" alt="offer">
+
+						</div>
+					</div>
+				</div>
+
+				<div class="swiper-slide">
+					<div class="offer-card" style="background-color:  #d8f0f9;">
+						<div class="offer-content">
+							<p class="offer-subtitle">Economy packs.</p>
+							<h3 class="offer-title">BUY MORE, SAVE MORE!</h3>
+						</div>
+						<div class="offer-image-box">
+							<img src="/images/offers6.png" alt="offer">
+
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="swiper-pagination"></div>
+		</div>
+	</div>
+</section>
+
+
+
+
+@* insta *@
+<section id="insta" class="my-5">
+	<div class="row g-0 py-5">
+
+		<div class="col instagram-item text-center position-relative">
+			<a href="https://www.instagram.com/p/DQ9GK6bjBlK/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank style="display: block;">
+				<div class="icon-overlay d-flex justify-content-center position-absolute">
+					<iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
+				</div>
+				<img src="~/images/insta1.jpg" alt="insta-img" class="img-fluid rounded-3">
+			</a>
+		</div>
+
+		<div class="col instagram-item text-center position-relative">
+			<a href="https://www.instagram.com/p/DQ9GSwvjCr5/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank style="display: block;">
+				<div class="icon-overlay d-flex justify-content-center position-absolute">
+					<iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
+				</div>
+				<img src="~/images/insta2.jpg" alt="insta-img" class="img-fluid rounded-3">
+			</a>
+		</div>
+		<div class="col instagram-item text-center position-relative">
+			<a href="https://www.instagram.com/p/DQ9GbqDjD4O/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank style="display: block;">
+				<div class="icon-overlay d-flex justify-content-center position-absolute">
+					<iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
+				</div>
+				<img src="~/images/insta3.jpg" alt="insta-img" class="img-fluid rounded-3">
+			</a>
+		</div>
+		<div class="col instagram-item text-center position-relative">
+			<a href="https://www.instagram.com/p/DQ9Ge15jEuq/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank style="display: block;">
+				<div class="icon-overlay d-flex justify-content-center position-absolute">
+					<iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
+				</div>
+				<img src="~/images/insta4.jpg" alt="insta-img" class="img-fluid rounded-3">
+			</a>
+		</div>
+		<div class="col instagram-item text-center position-relative">
+			<a href="https://www.instagram.com/p/DQ9GiR5jHh5/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank style="display: block;">
+				<div class="icon-overlay d-flex justify-content-center position-absolute">
+					<iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
+				</div>
+				<img src="~/images/insta5.jpg" alt="insta-img" class="img-fluid rounded-3">
+			</a>
+		</div>
+		<div class="col instagram-item text-center position-relative">
+			<a href="https://www.instagram.com/p/DQ9GlO5jMB7/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank style="display: block;">
+				<div class="icon-overlay d-flex justify-content-center position-absolute">
+					<iconify-icon class="text-white" icon="la:instagram"></iconify-icon>
+				</div>
+				<img src="~/images/insta6.jpg" alt="insta-img" class="img-fluid rounded-3">
+			</a>
+		</div>
+	</div>
+</section>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+
+
+<script>
+	$(document).ready(function () {
+
+		// 1. MAIN HERO SWIPER
+		const mainSwiper = new Swiper(".main-swiper", {
+			loop: true,
+			pagination: { el: ".swiper-pagination", clickable: true },
+			autoplay: { delay: 5000, disableOnInteraction: false },
+			on: {
+				init: function() { runAnimation(this); },
+				slideChangeTransitionStart: function () { runAnimation(this); }
+			}
+		});
+
+		function runAnimation(s) {
+			const activeSlide = s.slides[s.activeIndex];
+			if (!activeSlide) return;
+			const elements = activeSlide.querySelectorAll('.hero-content, .hero-image-container');
+			elements.forEach(el => {
+				el.style.animation = 'none';
+				el.offsetHeight;
+				el.style.animation = (el.classList.contains('hero-content')) ?
+									 'fadeInUp 1s ease-out forwards' :
+									 'fadeInUp 1.2s ease-out forwards';
+			});
+		}
+
+		// 2. SPECIAL OFFERS SWIPER
+		const offersSwiper = new Swiper(".offersSwiper", {
+			slidesPerView: 1.2,
+			spaceBetween: 30,
+			loop: true,
+			autoplay: { delay: 3000 },
+			breakpoints: {
+				640: { slidesPerView: 2, spaceBetween: 25 },
+				1200: { slidesPerView: 2.8, spaceBetween: 30 }
+			}
+		});
+
+		// 3. NEW ARRIVALS SWIPER
+		const newArrivalsSwiper = new Swiper("#new-products .productsSwiper", {
+			slidesPerView: 4,
+			spaceBetween: 20,
+			observer: true,
+			observeParents: true,
+			navigation: {
+				nextEl: "#new-products .swiper-button-next",
+				prevEl: "#new-products .swiper-button-prev",
+			},
+			breakpoints: {
+				320: { slidesPerView: 1.2 },
+				768: { slidesPerView: 2.5 },
+				1024: { slidesPerView: 4 }
+			}
+		});
+
+		// 4. BEST SELLING SWIPER
+		const bestSellersSwiper = new Swiper("#foodies .productsSwiper", {
+			slidesPerView: 4,
+			spaceBetween: 20,
+			observer: true,
+			observeParents: true,
+			navigation: {
+				nextEl: "#foodies .swiper-button-next",
+				prevEl: "#foodies .swiper-button-prev",
+			},
+			breakpoints: {
+				0: { slidesPerView: 1 },
+				576: { slidesPerView: 2 },
+				992: { slidesPerView: 4 }
+			}
+		});
+
+		// 5. NEW ARRIVALS FILTERING (Targeting buttons inside #new-products)
+		$('#new-products .filter-button').on('click', function () {
+			const filterValue = $(this).attr('data-filter');
+
+			$('#new-products .filter-button').removeClass('active');
+			$(this).addClass('active');
+
+			if (filterValue === '*') {
+				$('#new-products .swiper-slide').show();
+			} else {
+				$('#new-products .swiper-slide').hide();
+				$('#new-products ' + filterValue).show();
+			}
+
+			newArrivalsSwiper.update();
+			newArrivalsSwiper.slideTo(0, 0); // Reset arrows to beginning
+		});
+
+		// 6. BEST SELLING FILTERING (Targeting buttons inside #foodies)
+		$('#foodies .filter-button').on('click', function () {
+			const filterValue = $(this).attr('data-filter');
+
+			$('#foodies .filter-button').removeClass('active');
+			$(this).addClass('active');
+
+			if (filterValue === '*') {
+				$('#foodies .swiper-slide').show();
+			} else {
+				$('#foodies .swiper-slide').hide();
+				$('#foodies ' + filterValue).show();
+			}
+
+			bestSellersSwiper.update();
+			bestSellersSwiper.slideTo(0, 0); // Reset arrows to beginning
+		});
+
+		// 7. ADD TO CART AJAX
+		$(document).on('click', '.add-to-cart-btn', function (e) {
+			e.preventDefault();
+			var button = $(this);
+			var productId = button.data('product-id');
+
+			button.prop('disabled', true).text('Adding...');
+
+			$.ajax({
+				url: '@Url.Action("AddToCart", "Home")',
+				type: 'POST',
+				data: { id: productId, quantity: 1 },
+				success: function (response) {
+					if (response.success) {
+						showSuccessAlert('Added to your cart!');
+					} else {
+						showSuccessAlert(response.message || 'Error adding item to cart.', 'danger');
+					}
+				},
+				error: function () {
+					showSuccessAlert('An unexpected error occurred.', 'danger');
+				},
+				complete: function () {
+					button.prop('disabled', false).text('Add to cart');
+				}
+			});
+		});
+
+		function showSuccessAlert(message, type = 'success') {
+			var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+			var alertHtml = `
+				<div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+					 ${message}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			`;
+			$('#alertPlaceholder').append(alertHtml);
+			var newAlert = $('#alertPlaceholder').children().last();
+
+			var AddedItem = $("#cartCount").text();
+			var NewAddedItem = parseInt(AddedItem) + 1;
+			$("#cartCount").text(NewAddedItem);
+
+			setTimeout(function () {
+				newAlert.alert('close');
+			}, 2000);
+		}
+	});
+
+	function sideScroll(direction) {
+		const box = document.getElementById('scrollBox');
+		if(box) {
+			const scrollAmount = 400;
+			box.scrollLeft += (direction * scrollAmount);
+		}
+	}
+</script>

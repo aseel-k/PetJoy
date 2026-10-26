@@ -1,0 +1,369 @@
+﻿@model IEnumerable<PetJoy.Models.AdoptionForm>
+
+@{
+    ViewData["Title"] = "Adoption Requests";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+   
+    body {
+        font-family: 'Segoe UI',sans-serif;
+        background: #f8f9fa;
+    }
+
+    .modal .modal-header {
+        background-color: #0a0d54;
+        color: #ffffff;
+        border-bottom: none;
+    }
+
+    .modal .btn-close {
+        filter: invert(1);
+    }
+
+    .modal-dialog.modal-xl {
+        max-width: 850px; 
+    }
+
+    .modal .modal-section-title {
+        color: #0a0d54;
+        font-weight: 600;
+    }
+
+    .page-title {
+        font-weight: 800;
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #1f3c88 !important;
+    }
+
+    .custom-table {
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #ddd;
+        background: #fff;
+        box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    }
+
+        .custom-table thead {
+            background: #444;
+            color: #fff;
+        }
+
+        .custom-table tbody tr:hover {
+            background: #f2f2f2;
+            transform: scale(1.01);
+            transition: all .2s ease;
+        }
+
+    .badge-pending {
+        background: #f0ad4e;
+        color: #fff;
+    }
+
+    .badge-accepted {
+        background: #28a745;
+        color: #fff;
+    }
+
+    .badge-rejected {
+        background: #dc3545;
+        color: #fff;
+    }
+
+    .pet-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .pet-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 6px;
+        box-shadow: 0 3px 10px rgba(0,0,0,.1);
+    }
+
+    .info-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .btn-outline-neutral {
+        border: 1px solid #555;
+        color: #555;
+        font-size: 0.85rem;
+        padding: 3px 10px;
+        border-radius: 6px;
+    }
+
+        .btn-outline-neutral:hover {
+            background: #555;
+            color: #fff;
+        }
+
+    .table-responsive {
+        -webkit-overflow-scrolling: touch;
+    }
+
+ 
+    #neutralConfirmModal .modal-dialog {
+        max-width: 300px;
+        margin: auto;
+    }
+
+    #neutralConfirmModal .modal-content {
+        border-radius: 12px;
+        padding: 1.2rem;
+        background: #fff;
+        box-shadow: 0 12px 25px rgba(0,0,0,.25);
+        text-align: center;
+        animation: fadeScale 0.25s ease;
+    }
+
+    #neutralConfirmIcon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: -30px auto 10px;
+        font-size: 22px;
+        color: #fff;
+    }
+
+    #neutralConfirmTitle {
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    #neutralConfirmMessage {
+        font-size: 0.9rem;
+        color: #555;
+        margin-bottom: 1rem;
+    }
+
+    #neutralConfirmModal .btn {
+        font-size: 0.85rem;
+        border-radius: 20px;
+        min-width: 80px;
+        transition: all .15s;
+    }
+
+        #neutralConfirmModal .btn:hover {
+            transform: scale(1.05);
+        }
+
+    @@keyframes fadeScale {
+        0% {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /*  RESPONSIVE FIXES */
+
+    @@media (max-width: 768px) {
+        .custom-table tbody tr:hover {
+            transform: none;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .pet-info {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .pet-image {
+            width: 45px;
+            height: 45px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .modal-dialog.modal-xl {
+            max-width: 95%;
+            margin: 1rem auto;
+        }
+    }
+
+</style>
+
+<div class="container mt-5">
+    <h2 class="page-title">Adoption Requests</h2>
+    <div class="table-responsive">
+        <table class="table align-middle custom-table">
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Pet</th>
+                    <th>Status</th>
+                    <th class="text-center">Details</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.FullName</td>
+                        <td>@item.Email</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>
+                            <div class="pet-info">
+                                @if (!string.IsNullOrEmpty(item.AdoptPet?.Note))
+                                {
+                                    <img src="@item.AdoptPet.Note" class="pet-image" />
+                                }
+                                <div class="info-text">
+                                    <strong>@item.AdoptPet?.PetName</strong>
+                                    <small class="text-muted">@item.AdoptPet?.Animal</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge @(item.Status == "Pending" ? "badge-pending" : item.Status == "Accepted" ? "badge-accepted" : "badge-rejected")">@item.Status</span>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-outline-neutral btn-sm" data-bs-toggle="modal" data-bs-target="#detailsModal-@item.AdoptionFormId">Show</button>
+                        </td>
+                        <td>
+                            @if (item.Status == "Pending")
+                            {
+                                <form asp-action="Accept" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@item.AdoptionFormId" />
+                                    <button type="button" class="btn btn-success btn-sm" onclick="openNeutralModal(this.form,'accept')">Accept</button>
+                                </form>
+                                <form asp-action="Reject" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@item.AdoptionFormId" />
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="openNeutralModal(this.form,'reject')">Reject</button>
+                                </form>
+                            }
+                            else
+                            {
+
+                                <span class="text-muted">Done</span>
+                            }
+                        </td>
+                    </tr>
+
+                    <!-- DETAILS MODAL -->
+                    <div class="modal fade" id="detailsModal-@item.AdoptionFormId" tabindex="-1">
+                        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content p-0">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Adoption Request Details</h5>
+                                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body p-4">
+                                    <div class="row">
+                                        <div class="col-lg-6 mb-3">
+                                            <h6 class="modal-section-title">👤 Adopter Information</h6>
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item"><strong>Full Name:</strong> @item.FullName</li>
+                                                <li class="list-group-item"><strong>Email:</strong> @item.Email</li>
+                                                <li class="list-group-item"><strong>Phone:</strong> @(item.PhoneNumber ?? "—")</li>
+                                                <li class="list-group-item"><strong>Age:</strong> @(item.Age?.ToString() ?? "—")</li>
+                                                <li class="list-group-item"><strong>Address:</strong> @(item.Address ?? "—")</li>
+                                                <li class="list-group-item"><strong>City:</strong> @(item.City ?? "—")</li>
+                                                <li class="list-group-item"><strong>Postal Code:</strong> @(item.PostalCode ?? "—")</li>
+                                                <li class="list-group-item"><strong>Housing:</strong> @(item.HousingStatus ?? "—")</li>
+                                                <li class="list-group-item"><strong>Children:</strong> @(item.HasCurrentChildren ?? "—")</li>
+                                                <li class="list-group-item"><strong>Current Pets:</strong> @(item.HasCurrentPets ?? "—")</li>
+                                                <li class="list-group-item"><strong>Current Pet Details:</strong> @(item.CurrentPetDetails ?? "—")</li>
+                                                <li class="list-group-item"><strong>Previous Pets:</strong> @(item.HasPreviousPets ?? "—")</li>
+                                                <li class="list-group-item"><strong>Previous Pet Fate:</strong> @(item.PreviousPetFate ?? "—")</li>
+                                                <li class="list-group-item"><strong>Pet Confinement:</strong> @(item.PetConfinement ?? "—")</li>
+                                                <li class="list-group-item"><strong>Financial Agreement:</strong> @(item.FinancialAck ? "Yes" : "No")</li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="col-lg-6 mb-3">
+                                            <h6 class="modal-section-title">🐾 Pet Information</h6>
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item"><strong>Name:</strong> @item.AdoptPet?.PetName</li>
+                                                <li class="list-group-item"><strong>Animal:</strong> @item.AdoptPet?.Animal</li>
+                                                <li class="list-group-item"><strong>Age:</strong> @item.AdoptPet?.Age</li>
+                                                <li class="list-group-item"><strong>Gender:</strong> @item.AdoptPet?.Gender</li>
+                                                <li class="list-group-item"><strong>Breed:</strong> @item.AdoptPet?.Breed</li>
+                                                <li class="list-group-item"><strong>Description:</strong> @item.AdoptPet?.Description</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<!-- NEUTRAL MODERN CONFIRM MODAL -->
+<div class="modal fade" id="neutralConfirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div id="neutralConfirmIcon"></div>
+            <h5 id="neutralConfirmTitle"></h5>
+            <p id="neutralConfirmMessage"></p>
+            <div class="d-flex justify-content-center gap-2">
+                <button class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-sm" id="neutralConfirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openNeutralModal(form,type){
+        const icon=document.getElementById("neutralConfirmIcon");
+        const title=document.getElementById("neutralConfirmTitle");
+        const message=document.getElementById("neutralConfirmMessage");
+        const btn=document.getElementById("neutralConfirmBtn");
+
+        if(type==="accept"){
+            icon.innerHTML="✓"; icon.style.background="#28a745";
+            title.innerText="Accept Request";
+            message.innerText="Are you sure you want to ACCEPT this adoption request?";
+            btn.className="btn btn-success btn-sm";
+        }else{
+            icon.innerHTML="✕"; icon.style.background="#dc3545";
+            title.innerText="Reject Request";
+            message.innerText="Are you sure you want to REJECT this adoption request?";
+            btn.className="btn btn-danger btn-sm";
+        }
+
+        btn.onclick=function(){form.submit();};
+        new bootstrap.Modal(document.getElementById("neutralConfirmModal")).show();
+    }
+</script>

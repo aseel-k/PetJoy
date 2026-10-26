@@ -1,0 +1,291 @@
+﻿@{
+    ViewData["Title"] = "Our Services";
+    Layout = "_Layout";
+}
+
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<style>
+    .header-image-container {
+        position: relative;
+        text-align: center;
+        width: 100%;
+        margin: 0;
+        height: auto;
+        overflow: hidden;
+        margin-bottom: 0px;
+    }
+
+    .header-image {
+        width: 100%;
+        height: auto;
+        display: block;
+        filter: brightness(1);
+    }
+
+    .header-text {
+        position: absolute;
+        top: 25%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #102C4C;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 900;
+        font-size: 5rem;
+        text-transform: uppercase;
+        margin: 0;
+        white-space: nowrap;
+        text-shadow: none;
+        z-index: 10;
+    }
+
+    .intro-section {
+        background-color: #f8f9fa;
+        padding: 50px 20px;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .intro-text {
+        color: #102C4C;
+        font-family: Arial, sans-serif;
+        font-size: 1.25rem;
+        max-width: 800px;
+        margin: 0 auto 25px auto;
+        line-height: 1.6;
+        font-weight: 500;
+    }
+
+
+    .discover-button {
+        display: inline-block;
+        background-color: #102C4C;
+        color: #fff;
+        padding: 10px 30px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        text-transform: uppercase;
+        transition: background-color 0.3s, transform 0.2s;
+        border: 2px solid #102C4C;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+        .discover-button:hover {
+            background-color: #0d2238;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    .service-container {
+        padding: 40px 0;
+    }
+
+    .service-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 60px;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .service-image-col {
+        padding: 15px;
+    }
+
+    .image-wrapper {
+        padding: 20px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .service-image {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: none;
+    }
+
+
+    .service-title {
+        color: #102C4C;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 900;
+        margin-bottom: 15px;
+        font-size: 2.5rem;
+    }
+
+    .service-description {
+        color: #102C4C;
+        font-family: Arial, sans-serif;
+        line-height: 1.8;
+        font-size: 1.1rem;
+        font-weight: 400;
+        text-align: justify;
+    }
+
+    @@media (max-width: 992px) {
+        .header-text {
+            font-size: 3.5rem;
+            top: 30%; 
+            white-space: normal; 
+            width: 90%;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+        }
+
+        .service-title {
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .service-description {
+            text-align: center;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .service-row {
+            flex-direction: column !important;
+            text-align: center;
+        }
+
+        .service-content-col, .service-image-col {
+            width: 100% !important;
+            order: unset !important;
+        }
+
+        .service-row:nth-child(even) .service-image-col {
+            order: -1; 
+        }
+
+        .header-text {
+            font-size: 2.5rem;
+            top: 40%;
+        }
+
+        .service-title {
+            margin-top: 20px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .header-text {
+            font-size: 1.8rem;
+            top: 50%;
+        }
+
+        .intro-text {
+            font-size: 1rem;
+        }
+
+        .discover-button {
+            padding: 8px 20px;
+            font-size: 0.9rem;
+        }
+
+        .image-wrapper {
+            padding: 10px;
+            border-radius: 15px;
+        }
+    }
+</style>
+
+
+<section class="header-image-container">
+    <img src="~/images/OSERVI.jpg" alt="Our Services Header Image" class="header-image" />
+    <h1 class="header-text">OUR SERVICES</h1>
+</section>
+
+<section class="intro-section" data-aos="fade-up" data-aos-duration="1000">
+    <div class="container">
+        <p class="intro-text">
+            We are the first all-in-one pet sanctuary, devoted to filling every wagging tail and gentle paw with love, care, and boundless joy.
+        </p>
+        <a href="#services-start" class="discover-button">
+            DISCOVER OUR SERVICES
+        </a>
+    </div>
+</section>
+
+<div class="container service-container" id="services-start">
+
+    <div class="row service-row">
+        <div class="col-md-7 service-content-col" data-aos="fade-up" data-aos-duration="1000">
+            <h2 class="service-title">Pet Essentials</h2>
+            <p class="service-description">
+                Our shop is a sanctuary where every item has been chosen with thoughtfulness and care. From nourishing meals that sustain both body and spirit to toys that spark delight and curiosity to everyday essentials that make life smoother and more comfortable, each product is a reflection of our belief that pets deserve only the best. We curate our collection with a discerning eye for quality, wellness, and the subtle details that transform ordinary routines into moments of joy. Caring for your companion should never feel burdensome; it should feel like a series of small, meaningful rituals that deepen the connection you share.
+            </p>
+        </div>
+        <div class="col-md-5 service-image-col" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+            <div class="image-wrapper">
+                <img src="~/images/SERV_1.jpg" alt="Pet Essentials" class="service-image" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row service-row">
+        <div class="col-md-5 service-image-col" data-aos="fade-up" data-aos-duration="1000">
+            <div class="image-wrapper">
+                <img src="~/images/SERV_2.jpg" alt="Journeys of Belonging" class="service-image" />
+            </div>
+        </div>
+        <div class="col-md-7 service-content-col" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+            <h2 class="service-title">Journeys of Belonging</h2>
+            <p class="service-description">
+                Adoption is perhaps the purest form of care, and at PETJOY, it is a journey we handle with reverence, patience, and profound empathy. Every animal seeking safety, warmth, and love is treated as a unique soul, deserving of a home where trust can blossom and hearts can grow together. We guide each adoption with care, ensuring a gentle and thoughtful transition, so that both the animal and their new family can embark on a shared life full of comfort, security, and enduring affection. Adoption is not just a moment; it is the beginning of a story that we are honored to help write.
+            </p>
+        </div>
+    </div>
+
+    <div class="row service-row">
+        <div class="col-md-7 service-content-col" data-aos="fade-up" data-aos-duration="1000">
+            <h2 class="service-title">Guiding Hearts</h2>
+            <p class="service-description">
+                The path of pet companionship is rich with joy, discovery, and sometimes uncertainty. Our care and guidance services are designed to walk beside you through every twist and turn, offering insight, reassurance, and practical wisdom shaped by experience and empathy. Whether navigating nutrition, behavior, or daily well-being, we provide a steady hand and a listening heart, ensuring that your journey is confident, calm, and deeply fulfilling. We do not simply advise; we accompany, encourage, and celebrate the small victories that make every day with your companion meaningful.
+            </p>
+        </div>
+        <div class="col-md-5 service-image-col" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+            <div class="image-wrapper">
+                <img src="~/images/SERV_3.jpg" alt="Guiding Hearts" class="service-image" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    AOS.init({
+        offset: 120,
+        duration: 800,
+        once: true,
+        mirror: false,
+        anchorPlacement: 'top-bottom',
+    });
+
+    $(document).ready(function(){
+        $('a[href*="#"]').on('click', function(e) {
+            if (this.hash !== "") {
+                e.preventDefault();
+                var hash = this.hash;
+                $('html, body').animate({
+                    scrollTop: $(hash).offset().top
+                },
+                1500,
+                function(){
+                    window.location.hash = hash;
+                });
+            }
+        });
+    });
+</script>

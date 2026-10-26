@@ -1,0 +1,306 @@
+﻿@model List<PetJoy.Models.CartItem>
+@using System.Linq
+
+@{
+    ViewData["Title"] = "Your Cart";
+
+    decimal totalMRP = 0;
+    if (Model != null && Model.Any())
+    {
+        totalMRP = Model.Sum(item => item.Price * item.Quantity);
+    }
+
+    decimal discountPercentage = 0.10m;
+    decimal discountOnMRP = totalMRP * discountPercentage;
+    decimal subtotalAmount = totalMRP - discountOnMRP;
+    decimal actualShippingFee = 2.00m;
+    decimal totalAmountFinal = subtotalAmount + actualShippingFee;
+    bool isCartEmpty = (Model == null || !Model.Any());
+}
+
+<style>
+
+     body{
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .content-wrapper-modern {
+        padding-top: 3rem;
+        padding-bottom: 18rem;
+        padding-left: 3rem;
+        padding-right: 3rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .modern-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1rem;
+    }
+
+    .product-row-body {
+        padding: 1.2rem 1rem !important;
+    }
+
+    .product-image-sm {
+        width: 70px;
+        height: 70px;
+        border-radius: 6px;
+        object-fit: contain;
+    }
+
+    .product-name-modern {
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: normal !important; 
+        white-space: normal !important; 
+        word-break: break-word !important; 
+        max-width: 150px;
+    }
+
+    .qty-control-modern .btn {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.8rem;
+    }
+
+    .qty-control-modern .input-group-text {
+        font-size: 0.85rem;
+        background-color: white !important;
+    }
+
+    .remove-btn-icon {
+        color: #adb5bd;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    }
+
+        .remove-btn-icon:hover {
+            color: #dc3545;
+            background-color: #f8d7da;
+        }
+
+    .summary-container {
+        background-color: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+        padding: 20px;
+    }
+
+    .price-details-simple-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+        color: #333;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+
+        .price-details-simple-row.total-row {
+            padding-top: 15px;
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000;
+        }
+
+    .total-amount-right {
+        font-weight: 700;
+        font-size: 1.15rem;
+        font-family: monospace;
+    }
+
+        .total-amount-right.total-row-value {
+            font-size: 1.6rem;
+        }
+
+    .place-order-btn-modern {
+        background-color: #15406b;
+        color: white;
+        font-size: 1.1rem;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 30px;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+        .place-order-btn-modern:hover {
+            background-color: #1f5791;
+            color: white;
+        }
+
+        .place-order-btn-modern:active,
+        .place-order-btn-modern:focus {
+            background-color: #15406b !important;
+            color: white !important;
+            outline: none !important;
+        }
+
+
+        @@media (max-width: 576px) {
+            .product-name-modern
+
+        {
+            max-width: 120px !important; 
+        }
+
+        }
+
+       .continue-shopping-link {
+        color: #6c757d; 
+        text-decoration: none;
+        transition: color 0.2s ease-in-out;
+    }
+
+    .continue-shopping-link:hover {
+        color: #15406b !important;
+    }
+
+</style>
+
+<div class="content-wrapper-modern">
+    <div class="row pt-3">
+
+        <div class="col-12 mb-4">
+            <h3 class="fw-bold">
+                Shopping Cart
+                <span class="text-muted" style="font-size:1rem; font-weight:normal;">
+                    (@(Model != null ? Model.Count : 0) Items)
+                </span>
+            </h3>
+        </div>
+
+        <div class="col-lg-7 mb-5">
+
+            @if (!isCartEmpty)
+            {
+                <div class="row mb-2 d-none d-md-flex text-muted" style="font-size:0.9rem; font-weight:600; border-bottom:1px solid #eee; padding-bottom:5px;">
+                    <div class="col-5">Product Details</div>
+                    <div class="col-2 text-center">Price</div>
+                    <div class="col-2 text-center">Quantity</div>
+                    <div class="col-2 text-center">Total</div>
+                    <div class="col-1"></div>
+                </div>
+
+                <div class="product-list">
+                    @foreach (var item in Model)
+                    {
+                        <div class="card modern-card">
+                            <div class="card-body product-row-body">
+                                <div class="row align-items-center">
+
+                                    <div class="col-5 d-flex align-items-center">
+                                        <img src="@item.Note"
+                                             alt="@item.ProductName"
+                                             class="img-fluid me-3 product-image-sm"
+                                             onerror="this.onerror=null; this.src='https://placehold.co/70x70/f0f0f0/000000?text=No+Img';">
+
+                                        <div>
+                                            <h6 class="product-name-modern mb-1 text-truncate">@item.ProductName</h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-2 text-center">
+                                        <span class="fw-bold" style="font-size:0.95rem;">@item.Price.ToString("N2") JD</span>
+                                    </div>
+
+                                    <div class="col-2 text-center">
+                                        <div class="input-group input-group-sm justify-content-center qty-control-modern">
+                                            <a href="@Url.Action("DecreaseQuantity", "Cart", new { id = item.ProductId })"
+                                               class="btn btn-outline-secondary">-</a>
+
+                                            <span class="input-group-text">@item.Quantity</span>
+
+                                            <a href="@Url.Action("IncreaseQuantity", "Cart", new { id = item.ProductId })"
+                                               class="btn btn-outline-secondary">+</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-2 text-end">
+                                        <p class="fw-bold mb-0">@((item.Price * item.Quantity).ToString("N2")) JD</p>
+                                    </div>
+
+                                    <div class="col-1 text-end">
+                                        <a href="@Url.Action("Remove", "Cart", new { id = item.ProductId })"
+                                           class="btn btn-link p-0 remove-btn-icon">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="d-flex justify-content-start mt-4">
+                    <a href="@Url.Action("ShopProduct", "ShopProduct")"
+                       class="btn btn-link text-muted p-0 continue-shopping-link">
+                        ← Continue shopping
+                    </a>
+                </div>
+
+            }
+            else
+            {
+                <div class="alert alert-info text-center mt-4 p-5 modern-card">
+                    <h4><i class="bi bi-info-circle"></i> Your shopping cart is empty!</h4>
+                    <p>Looks like you haven't added anything yet.</p>
+                    <a href="@Url.Action("Index", "ShopProduct")"
+                       class="btn btn-primary btn-lg mt-3">Start Shopping Now</a>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4 ms-auto">
+            <div class="summary-container">
+                <h6 class="fw-bold mb-4">Order Summary</h6>
+
+                <div class="price-details-simple-row">
+                    <span>Subtotal</span>
+                    <span>@totalMRP.ToString("N2") JD</span>
+                </div>
+
+                <div class="price-details-simple-row">
+                    <span>Shipping Fee</span>
+                    <span>@actualShippingFee.ToString("N2") JD</span>
+                </div>
+
+                <div class="price-details-simple-row total-row">
+                    <span>Total</span>
+                    <span>@((totalMRP + actualShippingFee).ToString("N2")) JD</span>
+                </div>
+
+                <div class="checkout-button-container mt-3">
+                    @if (!isCartEmpty)
+                    {
+                        <a asp-action="Checkout"
+                           asp-controller="CheckOut"
+                           class="btn place-order-btn-modern w-100 fw-bold">
+                            Checkout
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn place-order-btn-modern w-100 fw-bold" disabled>
+                            CART IS EMPTY
+                        </button>
+                    }
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

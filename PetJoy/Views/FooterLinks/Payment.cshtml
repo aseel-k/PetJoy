@@ -1,0 +1,234 @@
+﻿@{
+    ViewData["Title"] = "Payment";
+    Layout = "_Layout";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        color: #102C4C;
+        overflow-x: hidden;
+    }
+
+    .hero-bar-section {
+        padding-top: 30px;
+        margin-top: 100px;
+        height: 220px;
+        position: relative;
+        background-color: #F2F7FF !important;
+        padding-bottom: 50px;
+        z-index: 1;
+    }
+
+    .container-fluid {
+        padding: 0;
+    }
+
+    .cat-overlap-image {
+        position: absolute;
+        z-index: 100;
+        width: 480px;
+        max-height: 500px;
+        object-fit: contain;
+        right: 1%;
+        bottom: -150px;
+    }
+
+    .hero-title {
+        color: #102C4C;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 900;
+        font-size: 2rem;
+        text-transform: uppercase;
+        white-space: nowrap;
+        margin-bottom: 4px;
+        margin-top: 0;
+        margin-left: -50px;
+    }
+
+    .hero-description {
+        color: #102C4C;
+        font-family: Arial, sans-serif;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.4;
+        margin-top: 0.1rem;
+        margin-bottom: 0;
+        text-align: justify;
+    }
+
+    .contact-info-section {
+        padding: 85px 0 80px 0;
+        background-color: #fff;
+    }
+
+    .payment-option-card {
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 30px 20px;
+        text-align: center;
+        transition: all 0.4s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        min-height: 200px;
+    }
+
+        .payment-option-card:hover {
+            border-color: #102C4C;
+            box-shadow: 0 8px 25px rgba(16, 44, 76, 0.15);
+            transform: translateY(-5px);
+        }
+
+    .payment-icon {
+        font-size: 3.5rem;
+        color: #102C4C;
+        margin-bottom: 20px;
+        transition: color 0.4s ease;
+    }
+
+    .payment-option-card:hover .payment-icon {
+        color: #6DAAF8;
+    }
+
+    .payment-option-card h3 {
+        color: #102C4C;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 900;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+    }
+
+    .payment-option-card p {
+        color: #102C4C;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    .payment-option-card i.fas {
+        font-family: 'Font Awesome 6 Free' !important;
+        font-weight: 900 !important;
+        font-style: normal !important;
+    }
+
+   
+    @@media (max-width: 991px) {
+        .hero-bar-section {
+            height: auto !important; 
+            text-align: center;
+            padding-bottom: 30px;
+        }
+
+        .hero-title {
+            margin-left: 0 !important;
+            white-space: normal !important; 
+            font-size: 1.8rem;
+        }
+
+        .hero-description {
+            padding: 0 15px;
+            text-align: center;
+        }
+
+        .cat-overlap-image {
+            position: relative !important; 
+            width: 70% !important;
+            max-width: 250px;
+            right: 0 !important;
+            bottom: 0 !important;
+            margin: 20px auto 0 auto;
+            display: block;
+        }
+
+        .contact-info-section {
+            padding-top: 40px !important;
+        }
+    }
+</style>
+
+<section class="hero-bar-section">
+    <div class="container-fluid">
+        <div class="row align-items-start" style="margin: 0;">
+            <div class="col-lg-7 offset-lg-1">
+                <h2 class="hero-title">PAYMENT</h2>
+                <p class="hero-description">
+                    Finalize your purchase with ease and peace of mind. This is the final step toward giving your pet the care, comfort, and happiness they deserve. Simply review your information, select the payment option that suits you best, and complete your secure checkout. Our protected system ensures every transaction is safe, seamless, and fully encrypted. And if you ever need assistance, our team is always here to guide you. Your pet deserves the best, and we’re here to make every part of your journey effortless.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <img src="~/images/PAYM.png"
+         alt="Payment image"
+         class="cat-overlap-image">
+</section>
+
+<section class="contact-info-section">
+    <div class="container">
+        <div class="row justify-content-center">
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="payment-option-card fade-in" data-delay="0">
+                    <i class="fas fa-credit-card payment-icon"></i>
+                    <h3>Credit Card</h3>
+                    <p>Visa / MasterCard / AMEX</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="payment-option-card fade-in" data-delay="400">
+                    <i class="fas fa-truck-loading payment-icon"></i>
+                    <h3>Cash on Delivery</h3>
+                    <p>Pay upon receiving your order</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="content-section py-5"></section>
+
+<script>
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+
+    function handleScrollAnimation() {
+        const elements = document.querySelectorAll('.fade-in');
+        elements.forEach(el => {
+            if (isElementInViewport(el) || el.getBoundingClientRect().top < (window.innerHeight * 0.9)) {
+                const delay = parseInt(el.getAttribute('data-delay')) || 0;
+                setTimeout(() => {
+                    el.classList.add('visible');
+                }, delay);
+            }
+        });
+    }
+
+    window.addEventListener('scroll', handleScrollAnimation);
+    window.addEventListener('load', handleScrollAnimation);
+    setTimeout(handleScrollAnimation, 50);
+</script>

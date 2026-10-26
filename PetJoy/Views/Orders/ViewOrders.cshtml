@@ -1,0 +1,371 @@
+﻿@model IEnumerable<PetJoy.Models.CheckOut>
+
+@{
+    ViewData["Title"] = "Orders";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+    :root {
+        --primary-blue: #1f3c88;
+        --soft-blue: #eef3ff;
+        --border-blue: #d6e0ff;
+    }
+
+    body {
+        background: #f8f9fa;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .page-title {
+        color: var(--primary-blue);
+        font-weight: 800;
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    /* TABLE */
+    .custom-table {
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border-blue);
+        background: #fff;
+        box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    }
+
+        .custom-table thead {
+            background: var(--primary-blue);
+            color: #fff;
+        }
+
+        .custom-table tbody tr:hover {
+            background: var(--soft-blue);
+            transform: scale(1.01);
+            transition: all .2s ease;
+        }
+
+    /* BADGES */
+    .badge-pending {
+        background: #f0ad4e;
+        color: #fff;
+    }
+
+    .badge-received {
+        background: #28a745;
+        color: #fff;
+    }
+
+    .badge-cancelled {
+        background: #dc3545;
+        color: #fff;
+    }
+
+    /* BUTTON */
+    .btn-outline-blue {
+        border: 1px solid var(--primary-blue);
+        color: var(--primary-blue);
+        font-size: .85rem;
+        padding: 3px 10px;
+        border-radius: 6px;
+    }
+
+        .btn-outline-blue:hover {
+            background: var(--primary-blue);
+            color: #fff;
+        }
+
+    /* MODAL */
+    .modal-content {
+        border-radius: 12px;
+    }
+
+    .modal-header {
+        background: var(--primary-blue);
+        color: #fff;
+        border-bottom: none;
+    }
+
+    .section-title {
+        font-weight: 700;
+        color: var(--primary-blue);
+        margin-top: 1rem;
+        margin-bottom: .5rem;
+    }
+
+
+   
+    #neutralConfirmModal .modal-dialog {
+        max-width: 300px;
+        margin: auto;
+    }
+
+    #neutralConfirmModal .modal-content {
+        border-radius: 12px;
+        padding: 1.2rem;
+        background: #fff;
+        box-shadow: 0 12px 25px rgba(0,0,0,.25);
+        text-align: center;
+        animation: fadeScale 0.25s ease;
+    }
+
+    #neutralConfirmIcon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: -30px auto 10px;
+        font-size: 22px;
+        color: #fff;
+    }
+
+    #neutralConfirmTitle {
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    #neutralConfirmMessage {
+        font-size: 0.9rem;
+        color: #555;
+        margin-bottom: 1rem;
+    }
+
+    #neutralConfirmModal .btn {
+        font-size: 0.85rem;
+        border-radius: 20px;
+        min-width: 80px;
+        transition: all .15s;
+    }
+
+        #neutralConfirmModal .btn:hover {
+            transform: scale(1.05);
+        }
+
+    @@keyframes fadeScale {
+        0% {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+
+
+    @@media (max-width: 768px) {
+        .custom-table tbody tr:hover {
+            transform: none;
+        }
+    }
+
+    /* Make pet info wrap nicely on small screens */
+    @@media (max-width: 576px) {
+        .pet-info {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .pet-image {
+            width: 45px;
+            height: 45px;
+        }
+    }
+
+    /* Stack action buttons on mobile */
+    @@media (max-width: 576px) {
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+    }
+
+    /* Smaller modal on mobile */
+    @@media (max-width: 576px) {
+        .modal-dialog.modal-xl {
+            max-width: 95%;
+            margin: 1rem auto;
+        }
+    }
+
+</style>
+
+<div class="container-fluid px-4 px-xl-5 mt-5">
+    <h2 class="page-title">Orders</h2>
+
+    <div class="table-responsive">
+        <table class="table align-middle custom-table">
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Payment</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th class="text-center">Details</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>#@order.ShopOrderMasterId</td>
+                        <td><strong>@order.FirstName @order.LastName</strong></td>
+                        <td>@order.Email</td>
+                        <td>@order.ShopOrderMaster?.OrderDate.ToString("dd MMM yyyy")</td>
+                        <td>@order.PaymentMethod?.PaymentMethodName</td>
+                        <td><strong>JD @order.ShopOrderMaster?.TotalPrice</strong></td>
+
+                        <td>
+                            <span class="badge
+                                        @(order.ShopOrderMaster.Status == "Pending" ? "badge-pending" :
+                                                                                                      order.ShopOrderMaster.Status == "Received" ? "badge-received" :
+                                                                                                      "badge-cancelled")">
+                            @order.ShopOrderMaster.Status
+                        </span>
+                    </td>
+
+                        <td class="text-center">
+                            <button class="btn btn-outline-blue btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#orderModal-@order.ShopOrderMasterId">
+                                Show
+                            </button>
+                        </td>
+
+                        <td>
+
+                        @if (order.ShopOrderMaster.Status == "Pending")
+                            {
+                                <div class="d-flex flex-nowrap gap-1">
+                                    <form asp-action="UpdateStatus" method="post" onsubmit="event.preventDefault(); openNeutralModal(this, 'Received')">
+                                        <input type="hidden" name="orderMasterId" value="@order.ShopOrderMasterId" />
+                                        <input type="hidden" name="status" value="Received" />
+                                        <button type="submit" class="btn btn-success btn-sm px-2">Received</button>
+                                    </form>
+
+                                    <form asp-action="UpdateStatus" method="post" onsubmit="event.preventDefault(); openNeutralModal(this, 'Cancelled')">
+                                        <input type="hidden" name="orderMasterId" value="@order.ShopOrderMasterId" />
+                                        <input type="hidden" name="status" value="Cancelled" />
+                                        <button type="submit" class="btn btn-danger btn-sm px-2">Cancel</button>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Done</span>
+                            }
+
+                        </td>
+                    </tr>
+
+                    <!-- MODAL -->
+                    <div class="modal fade" id="orderModal-@order.ShopOrderMasterId" tabindex="-1">
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Order #@order.ShopOrderMasterId Details</h5>
+                                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="section-title">Customer</div>
+                                    <p><b>Name:</b> @order.FirstName @order.LastName</p>
+                                    <p><b>Email:</b> @order.Email</p>
+                                    <p><b>Phone:</b> @order.PhoneNumber</p>
+
+                                    <div class="section-title">Delivery</div>
+                                    <p><b>Address:</b> @order.Address</p>
+                                    <p><b>City:</b> @order.City</p>
+                                    <p><b>Country:</b> @order.Country</p>
+
+                                    <div class="section-title">Order Items</div>
+                                    <ul class="list-group">
+                                        @foreach (var item in order.OrderItems)
+                                        {
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>@item.ShopProduct?.Name x @item.Quantity</span>
+                                                <span>JD @(item.UnitPrice* item.Quantity)</span>
+                                            </li>
+                                        }
+                                    </ul>
+
+                                    <hr />
+                                    <p><b>Subtotal:</b> JD @order.ShopOrderMaster?.SubTotal</p>
+                                    <p><b>Shipping:</b> JD @order.ShopOrderMaster?.ShippingCost</p>
+                                    <h5><b>Total:</b> JD @order.ShopOrderMaster?.TotalPrice</h5>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- NEUTRAL MODERN CONFIRM MODAL -->
+<div class="modal fade" id="neutralConfirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div id="neutralConfirmIcon"></div>
+            <h5 id="neutralConfirmTitle"></h5>
+            <p id="neutralConfirmMessage"></p>
+            <div class="d-flex justify-content-center gap-2">
+                <button class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-sm" id="neutralConfirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+       function openNeutralModal(form, type) {
+        const icon = document.getElementById("neutralConfirmIcon");
+        const title = document.getElementById("neutralConfirmTitle");
+        const message = document.getElementById("neutralConfirmMessage");
+        const btn = document.getElementById("neutralConfirmBtn");
+
+        if (type === "Received") {
+            icon.innerHTML = "✓";
+            icon.style.background = "#28a745";
+            title.innerText = "Mark as Received";
+            message.innerText = "Are you sure you want to mark this order as Received?";
+            btn.className = "btn btn-success btn-sm";
+        } else if (type === "Cancelled") {
+            icon.innerHTML = "✕";
+            icon.style.background = "#dc3545";
+            title.innerText = "Cancel Order";
+            message.innerText = "Are you sure you want to CANCEL this order?";
+            btn.className = "btn btn-danger btn-sm";
+        }
+
+        btn.onclick = function () {
+            form.submit();
+        };
+
+        new bootstrap.Modal(document.getElementById("neutralConfirmModal")).show();
+    }
+
+</script>

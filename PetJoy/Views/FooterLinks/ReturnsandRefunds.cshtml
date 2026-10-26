@@ -1,0 +1,309 @@
+﻿@{
+    ViewData["Title"] = "Returns & Refunds";
+    Layout = "_Layout";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        color: #102C4C;
+        overflow-x: hidden;
+    }
+
+    .hero-bar-section {
+        padding-top: 25px;
+        margin-top: 100px;
+        height: 220px;
+        position: relative;
+        background-color: #F2F7FF !important;
+        padding-bottom: 50px;
+        z-index: 1;
+        direction: ltr;
+    }
+
+    .container-fluid {
+        padding: 0;
+    }
+
+    .cat-overlap-image {
+        position: absolute;
+        z-index: 100;
+        width: 400px;
+        max-height: 350px;
+        object-fit: contain;
+        right: 7%;
+        bottom: -57px;
+    }
+
+    .hero-title {
+        color: #102C4C;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 900;
+        font-size: 2rem;
+        text-transform: uppercase;
+        white-space: nowrap;
+        margin-bottom: 10px;
+        margin-top: 0;
+        margin-left: 0 !important;
+        margin-right: 0;
+        text-align: left;
+    }
+
+    .hero-description {
+        color: #102C4C;
+        font-family: Arial, sans-serif;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        margin-top: 0.5rem;
+        margin-bottom: 0;
+        text-align: justify;
+        padding-left: 20px;
+    }
+
+    .info-card-section {
+        padding: 80px 0;
+        background-color: #fff;
+    }
+
+    .info-card {
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 30px 20px;
+        text-align: left;
+        transition: all 0.4s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 25px;
+    }
+
+        .info-card:hover {
+            border-color: #102C4C;
+            box-shadow: 0 8px 25px rgba(16, 44, 76, 0.15);
+            transform: translateY(-5px);
+        }
+
+    .info-icon {
+        font-size: 3rem;
+        color: #102C4C;
+        margin-bottom: 20px;
+        transition: color 0.4s ease;
+    }
+
+    .info-card:hover .info-icon {
+        color: #6DAAF8;
+    }
+
+    .info-card h3 {
+        color: #102C4C;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 900;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        text-align: left;
+        width: 100%;
+    }
+
+    .info-card a {
+        color: #102C4C;
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+        .info-card a:hover {
+            color: #6DAAF8;
+            text-decoration: underline;
+        }
+
+    .info-card p, .info-card ul {
+        color: #102C4C;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 0;
+        text-align: left;
+        width: 100%;
+    }
+
+    .info-card ul {
+        list-style-type: disc;
+        padding-left: 20px;
+        padding-right: 0;
+    }
+
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    .info-card i.fas {
+        font-family: 'Font Awesome 6 Free' !important;
+        font-weight: 900 !important;
+        font-style: normal !important;
+    }
+
+  
+    @@media (max-width: 991px) {
+        .hero-bar-section {
+            height: auto !important; 
+            text-align: center;
+            padding-bottom: 30px;
+        }
+
+        .hero-title {
+            white-space: normal !important; 
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .hero-description {
+            padding-left: 0 !important;
+            text-align: center;
+        }
+
+        .cat-overlap-image {
+            position: relative !important; 
+            width: 80% !important;
+            max-width: 300px;
+            right: 0 !important;
+            bottom: 0 !important;
+            margin: 20px auto 0 auto;
+            display: block;
+        }
+
+        .info-card-section {
+            padding-top: 40px !important;
+        }
+    }
+</style>
+
+<section class="hero-bar-section">
+    <div class="container-fluid">
+        <div class="row align-items-start" style="margin: 0; direction: ltr;">
+
+            <div class="col-lg-7 offset-lg-1" style="text-align: left;">
+                <h2 class="hero-title">RETURNS & REFUNDS</h2>
+                <p class="hero-description">
+                    At PETJOY, every product you choose is meant to bring comfort and a promise delivered to the pet who adds color to your life. But if something arrives that doesn't echo what you hoped for, we ensure the path back is gentle, graceful, and free of complication. With attentive guidance, every return is handled swiftly and with the kind of respect that honors your trust, so your experience remains warm and seamless.
+                </p>
+            </div>
+
+        </div>
+    </div>
+    <img src="~/images/RETREF.png"
+         alt="Illustration of a customer returning an item to a store"
+         class="cat-overlap-image">
+</section>
+
+<div class=" container-md">
+    <section class="info-card-section">
+        <div class="container">
+            <div class="row" style="direction: ltr;">
+
+                <div class="col-lg-12 mb-4">
+                    <div class="info-card fade-in" data-delay="0">
+                        <i class="fas fa-undo-alt info-icon"></i>
+                        <h3>Return Timeframe</h3>
+                        <p>
+                            You may return your purchase within 14 days of receipt for a full refund. This includes the full invoice amount and delivery charges, and we will also cover the cost of returning the item to us.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 mb-4">
+                    <div class="info-card fade-in" data-delay="100">
+                        <i class="fas fa-exchange-alt info-icon"></i>
+                        <h3>Changing Your Mind</h3>
+                        <p>
+                            Should you reconsider your purchase, you may return the item within the 14-day window with no questions asked. Your peace of mind remains our priority.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 mb-4">
+                    <div class="info-card fade-in" data-delay="200">
+                        <i class="fas fa-exclamation-triangle info-icon"></i>
+                        <h3>Faulty Goods</h3>
+                        <p>
+                            In the rare event that an item arrives damaged, defective, or incorrect, please contact our customer service team immediately. We will promptly arrange a replacement or provide a full refund.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 mb-4">
+                    <div class="info-card fade-in" data-delay="300">
+                        <i class="fas fa-box-open info-icon"></i>
+                        <h3>Non-refundable Products</h3>
+                        <div class="info-card-content">
+                            <p>Certain items cannot be returned or refunded, including:</p>
+                            <ul>
+                                <li>Personalized products tailored specifically for your pet.</li>
+                                <li>Perishable goods that cannot be safely restocked.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 mb-4">
+                    <div class="info-card fade-in" data-delay="400">
+                        <i class="fas fa-headset info-icon"></i>
+                        <h3>Initiating a Return</h3>
+                        <p>
+                            To begin a return, please reach out to our customer service team with the item's Article Number. We will either issue a return shipping label or arrange a parcel pickup directly from your address.
+                        </p>
+                        <p style="margin-top: 10px;"><b>Contact Information:</b></p>
+                        <ul>
+                            <li>
+                                <i class="fas fa-phone-alt"></i>
+                                <a href="tel:+962785303092"><b>Phone Number: +962 785303092</b></a>
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <a href="mailto:petjoyy26@gmail.com"><b>Email: petjoyy26@gmail.com</b></a>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+
+        return (
+            rect.bottom > 0 &&
+            rect.top < windowHeight
+        );
+    }
+
+    function handleScrollAnimation() {
+        const elements = document.querySelectorAll('.fade-in');
+        elements.forEach(el => {
+            if (isElementInViewport(el)) {
+                const delay = parseInt(el.getAttribute('data-delay')) || 0;
+                setTimeout(() => {
+                    el.classList.add('visible');
+                }, delay);
+            }
+        });
+    }
+
+    window.addEventListener('scroll', handleScrollAnimation);
+    window.addEventListener('load', handleScrollAnimation);
+</script>

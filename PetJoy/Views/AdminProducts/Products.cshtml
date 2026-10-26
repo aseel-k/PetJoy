@@ -1,0 +1,664 @@
+﻿@model PetJoy.Models.FilterSide
+@using Microsoft.AspNetCore.Http.Extensions
+
+@{
+    ViewData["Title"] = "Admin Shop Products";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var currentSearchTerm = Context.Request.Query["search"];
+    var selectedPetTypeId = Model.SelectedPetTypeId.HasValue ? Model.SelectedPetTypeId.Value : 0; 
+
+   var petTypes = new Dictionary<int, string>
+    {
+        { 0, "Filter by Pet Type" }, 
+        { 1, "Cat" },               
+        { 2, "Dog" },               
+        { 3, "Fish" },              
+        { 4, "Bird" },              
+        { 5, "Small Pets" }         
+    };
+}
+
+
+<div id="alertPlaceholder" class="container" style="position: fixed; top: 10px; right: 10px; z-index: 1050; max-width: 380px;">
+</div>
+
+<div class="container-fluid mb-5" style="padding-top: 40px;">
+    <div class="row justify-content-center">
+        <div class="col-lg-9 ps-4">
+
+            @* Filter Section *@
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <p class="mb-0">Showing 1-@Model.Products.Count() of @Model.Products.Count() results</p>
+
+                <div class="d-flex gap-2">
+                    @* Pet Type Filter Dropdown *@
+                    <select id="petTypeFilterDropdown" name="petTypeId" class="form-select w-auto">
+                        @foreach (var petType in petTypes)
+                        {
+                            <option value="@petType.Key" @@(selectedPetTypeId == petType.Key ? "selected" : "")>
+                                @petType.Value
+                            </option>
+                        }
+                    </select>
+
+                </div>
+            </div>
+
+            @* cards *@
+            <div class="row">
+                @foreach (var item in Model.Products)
+                {
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card h-100 text-center border-0 shadow">
+                            <div class="card-img-top p-3 bg-white d-flex justify-content-center align-items-center"
+                                 style="height: 250px;">
+                                <img src="@Url.Content(item.Note)"
+                                     class="img-fluid"
+                                     alt="@(item.Name ?? "Product Image")"
+                                     style="max-height: 100%; max-width: 100%; object-fit: contain;"
+                                     loading="lazy" />
+                            </div>
+
+                            <div class="card-body d-flex flex-column justify-content-between text-center">
+                                <div class="card-content">
+                                    <h5 class="card-title text-dark product-name-source">@(item.Name ?? "Unnamed Product")</h5>
+                                    <p class="card-text fw-bold text-dark product-price-source">@(item.Price?.ToString("F2") ?? "N/A") JD</p>
+                                </div>
+
+                                <div class="mt-auto d-flex justify-content-center gap-2">
+                                    <button class="btn btn-sm btn-info text-white edit-product-btn" style="background-color:darkblue;"
+                                            data-product-id="@item.ShopProductId"
+                                            data-pet-type-id="@item.PetTypeId"
+                                            data-brands-id="@item.BrandsId"
+                                            data-shop-type-id="@item.ShopTypeId"
+                                            title="Edit Product">
+                                        Edit
+                                    </button>
+
+                                    <button class="btn btn-sm btn-danger delete-product-btn"
+                                            data-product-id="@item.ShopProductId"
+                                            title="Delete Product">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @* pagination *@
+            @{
+                int current = Model.CurrentPage;
+                int total = Model.TotalPages;
+
+                int startPage = Math.Max(1, current - 1);
+                int endPage = Math.Min(total, current + 1);
+            }
+            <nav class="mt-4" aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+
+                    <li class="page-item @(current == 1 ? "disabled" : "")">
+                        <a class="page-link"
+                           href="@Url.Action("Products", "AdminProducts", new {
+                                        page = current - 1,
+                                        petTypeId = Model.SelectedPetTypeId,
+                                        brandId = Model.SelectedBrandId,
+                                        typeId = Model.SelectedTypeId,
+                                        search = currentSearchTerm
+                                    })">
+                            &lt;
+                        </a>
+                    </li>
+
+                    @for (int i = startPage; i <= endPage; i++)
+                    {
+                        <li class="page-item @(i == current ? "active" : "")">
+                            <a class="page-link"
+                               href="@Url.Action("Products", "AdminProducts", new {
+                                            page = i,
+                                            petTypeId = Model.SelectedPetTypeId,
+                                            brandId = Model.SelectedBrandId,
+                                            typeId = Model.SelectedTypeId,
+                                            search = currentSearchTerm
+                                        })">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    <li class="page-item @(current == total ? "disabled" : "")">
+                        <a class="page-link"
+                           href="@Url.Action("Products", "AdminProducts", new {
+                                            page = current + 1,
+                                            petTypeId = Model.SelectedPetTypeId,
+                                            brandId = Model.SelectedBrandId,
+                                            typeId = Model.SelectedTypeId,
+                                            search = currentSearchTerm
+                                        })">
+                            &gt;
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white" style="background-color: darkblue !important;">
+                <h5 class="modal-title text-white" id="editProductModalLabel">
+                    <i class="fas fa-edit me-2"></i> Edit Product Details
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form id="editProductForm" enctype="multipart/form-data">
+                <div class="modal-body p-4">
+
+                    <input type="hidden" id="editProductId" name="ShopProductId" value="" />
+                    <input type="hidden" id="editProductNote" name="Note">
+                    <div class="mb-3">
+                        <label for="editProductName" class="form-label visually-hidden">Product Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="fas fa-tag"></i>
+                            </span>
+                            <input type="text" class="form-control form-control-lg border-start-0" id="editProductName" name="Name" placeholder="Product Name" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPetTypeId" class="form-label visually-hidden">Pet Type</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="fas fa-heart"></i>
+                            </span>
+                            <select class="form-select form-select-lg border-start-0" id="editPetTypeId" name="PetTypeId" >
+                                <option value="" data-name="Select Pet Type" disabled>Select Pet Type</option>
+                                <option value="1" data-name="Cat">Cat</option>
+                                <option value="2" data-name="Dog">Dog</option>
+                                <option value="3" data-name="Fish">Fish</option>
+                                <option value="4" data-name="Bird">Bird</option>
+                                <option value="5" data-name="Small Pets">Small Pets</option>
+                            </select>
+                        </div>
+                    </div>
+
+                   <div class="mb-3">
+                        <label for="editBrandId" class="form-label visually-hidden">Brand</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="fas fa-medal"></i>
+                            </span>
+                            <select class="form-select form-select-lg border-start-0" id="editBrandId" name="BrandsId" required>
+                               <option value="" data-name="Select Brand" disabled>Select Brand</option>
+                                <option value="" data-name="No Brand">No Brand</option>
+                                <option value="1" data-name="Royal Canin">Royal Canin</option>
+                                <option value="2" data-name="Taste Of The Wild">Taste Of The Wild</option>
+                                <option value="3" data-name="Monge">Monge</option>
+                                <option value="4" data-name="Bewi Cat">Bewi Cat</option>
+                                <option value="5" data-name="Montego">Montego</option>
+                                <option value="6" data-name="Henrys">Henrys</option>
+                                <option value="7" data-name="Duvo">Duvo</option>
+                                <option value="8" data-name="Tetra">Tetra</option>
+                                <option value="9" data-name="Harrison">Harrison</option>
+                                <option value="10" data-name="Kiki Excellent">Kiki Excellent</option>
+                            </select>
+                        </div>
+                    </div>
+
+                   <div class="mb-3">
+                        <label for="editTypeId" class="form-label visually-hidden">Category</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="fas fa-store"></i>
+                            </span>
+                            <select class="form-select form-select-lg border-start-0" id="editTypeId" name="ShopTypeId" required>
+                                <option value="" data-name="Select Category" disabled>Select Category</option>
+                                <option value="1" data-name="Food & Treats">Food & Treats </option>
+                                <option value="2" data-name="Clothes">Clothes</option>
+                                <option value="3" data-name="Toys">Toys </option>
+                                <option value="4" data-name="Litter">Litter </option>
+                                <option value="5" data-name="Bowls & Containers">Bowls & Containers</option>
+                                <option value="6" data-name="Collar">Collar </option>
+                                <option value="7" data-name="Grooming">Grooming </option>
+                                <option value="8" data-name="Beds">Beds</option>
+                                <option value="9" data-name="Travel Crates">Travel Crates</option>
+                                <option value="10" data-name="Cages">Cages</option>
+                                <option value="11" data-name="Health & Wellness">Health & Wellness</option>
+                                <option value="12" data-name="Aquariums">Aquariums</option>
+                                <option value="13" data-name="Accessories">Accessories</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="editProductPrice" class="form-label visually-hidden">Price (JD)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </span>
+                            <input type="number" step="0.01" class="form-control form-control-lg border-start-0" id="editProductPrice" name="Price" placeholder="Price (JD)" >
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveEditButton" style="background-color: darkblue; padding: 5px 10px; font-size:25px ;line-height: 1; ">
+                        <span>  <i class="fas fa-save " style="block-size:15px;"></i> <span style="font-size:20px"> Save Changes</span></span>
+
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-primary text-white" style="background-color: darkblue !important;">
+                <h5 class="modal-title text-white" id="deleteConfirmationModalLabel">Confirm Product Deletion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body text-center">
+                <p class="fs-5 fw-bold">Are you sure you want to delete this product?</p>
+
+                <input type="hidden" id="productToDeleteId" value="" />
+
+                <div id="productDetails" class="my-4 d-flex flex-column align-items-center">
+
+                    <img id="productImage" src="" alt="Product Image"
+                         class="img-fluid shadow-sm"
+                         style="max-width: 150px; height: auto; object-fit: contain; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 10px;">
+
+                    <p class="h5 mt-2 mb-0" id="productName">...</p>
+                    <p class="text-black fw-bold fs-6" id="productPrice">...</p>
+                </div>
+
+            </div>
+
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">
+                    <i class="fas fa-trash-alt me-2"></i> Confirm Delete
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span style="font-size:15px">Cancel</span></button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="productDetailsModal" tabindex="-1" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content text-center" style="border-radius: 15px; background-color: #f7f7f7;">
+            <div class="modal-header border-0 pb-0 d-flex justify-content-end">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0 px-4">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-check-circle me-2" style="font-size: 20px; color: darkgreen !important;"></i>
+                    <h5 class="modal-title fw-bold m-0" id="productDetailsModalLabel">Updated Successfully!</h5>
+                </div>
+                
+                <img id="successProductImage" src="" alt="Product Image"
+                     class="img-fluid shadow mb-4"
+                     style="max-width: 150px; height: auto; object-fit: cover; border-radius: 8px; border: 2px solid #fff; display: block; margin: 0 auto;">
+
+                <div id="successProductDetailsContainer" class="d-flex flex-column align-items-center">
+                    
+                    <div class="w-100 text-start px-3 py-3 bg-white rounded shadow-sm border border-light">
+                        <p class="mb-1 small">
+                            <strong class="me-1 " style="color:darkblue">Name:</strong> <span id="successProductName">...</span>
+                        </p>
+                        <p class="mb-1 small">
+                            <strong class="me-1 " style="color:darkblue">Price:</strong> <span id="successProductPrice" class="fw-bold">...</span> JD
+                        </p>
+                        <hr class="my-1">
+                        <p class="mb-1 small">
+                            <strong class="me-1 " style="color:darkblue">Pet Type:</strong> <span id="successProductPetType">...</span>
+                        </p>
+                        <p class="mb-1 small">
+                            <strong class="me-1 " style="color:darkblue">Brand:</strong> <span id="successProductBrand">...</span>
+                        </p>
+                        <p class="mb-0 small">
+                            <strong class="me-1" style="color:darkblue">Category:</strong> <span id="successProductCategory">...</span>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0 justify-content-center">
+                <button type="button" 
+                        class="btn btn-primary d-flex align-items-center justify-content-center" 
+                        data-bs-dismiss="modal" 
+                        style="background-color: darkblue; height: 35px; min-width: 100px;">
+                    <span style="font-size: 16px; margin: 0;">Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="deleteSuccessModal" tabindex="-1" aria-labelledby="deleteSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content text-center" style="border-radius: 15px; background-color: #f7f7f7;">
+            <div class="modal-header border-0 pb-0 d-flex justify-content-end">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0 px-4">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-trash-alt me-2" style="font-size: 20px; color: darkred !important;"></i>
+                    <h5 class="modal-title fw-bold m-0" id="deleteSuccessModalLabel">Product Deleted!</h5>
+                </div>
+                
+                <img id="deletedProductImage" src="" alt="Deleted Product Image"
+                     class="img-fluid shadow mb-4"
+                     style="max-width: 150px; height: auto; object-fit: cover; border-radius: 8px; border: 2px solid #fff; display: block; margin: 0 auto;">
+
+                <div id="deletedProductDetailsContainer" class="d-flex flex-column align-items-center">
+                    
+                    <div class="w-100 text-start px-3 py-3 bg-white rounded shadow-sm border border-light">
+                        <p class="mb-1 small">
+                            <strong class="me-1 " style="color:darkblue">Name:</strong> <span id="deletedProductName">...</span>
+                        </p>
+                        <p class="mb-1 small">
+                            <strong class="me-1 " style="color:darkblue">Price:</strong> <span id="deletedProductPrice" class="fw-bold">...</span> JD
+                        </p>
+                        <hr class="my-1">
+                        <p class="mb-1 small">
+                            <strong class="me-1 " style="color:darkblue">Pet Type:</strong> <span id="deletedProductPetType">...</span>
+                        </p>
+                        <p class="mb-1 small">
+                            <strong class="me-1 " style="color:darkblue">Brand:</strong> <span id="deletedProductBrand">...</span>
+                        </p>
+                        <p class="mb-0 small">
+                            <strong class="me-1" style="color:darkblue">Category:</strong> <span id="deletedProductCategory">...</span>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0 justify-content-center">
+                <button type="button" 
+                        class="btn btn-primary d-flex align-items-center justify-content-center" 
+                        data-bs-dismiss="modal" 
+                        style="background-color: darkblue; height: 35px; min-width: 100px;">
+                    <span style="font-size: 16px; margin: 0;">Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9Fh2sF7Q8C6F2f3Bf2rB5N/zCq4g0gO1E6t9Jg0" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+            console.log("✅ JS Loaded Successfully");
+
+            
+            if ($('#petTypeFilterDropdown').length) {
+                $('#petTypeFilterDropdown').on('change', function () {
+                    var petTypeId = $(this).val();
+                    var currentUrl = new URL(window.location.href, window.location.origin);
+
+                    if (petTypeId && petTypeId !== '0') {
+                        currentUrl.searchParams.set('petTypeId', petTypeId);
+                    } else {
+                        currentUrl.searchParams.delete('petTypeId');
+                    }
+
+                    currentUrl.searchParams.set('page', '1');
+                    
+                    currentUrl.searchParams.delete('sortOrder'); 
+
+                    window.location.href = currentUrl.href;
+                });
+            }
+
+
+            // ALERT FUNCTION 
+            function showSimpleAlert(message, type = 'success') {
+
+                var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+                var iconHtml = type === 'success' ? '<i class="fas fa-check-circle me-2"></i>' : '<i class="fas fa-times-circle me-2"></i>';
+                if (type === 'danger') {
+                    iconHtml = '<i class="fas fa-times-circle me-2"></i>';
+                }
+
+                var alertHtml = `
+                    <div class="alert ${alertClass} alert-dismissible fade show shadow" role="alert" style="border-left: 5px solid ${type === 'success' ? 'darkgreen' : 'darkred'};">
+                        ${iconHtml} ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `;
+
+                $('#alertPlaceholder').append(alertHtml);
+
+                setTimeout(function () {
+                    $('.alert').last().alert('close');
+                }, 3000);
+            }
+
+            // EDIT PRODUCT (Modal Filler - Unchanged)
+            $(document).on('click', '.edit-product-btn', function (e) {
+                e.preventDefault();
+
+                var btn = $(this);
+                var card = btn.closest('.card');
+
+                $('#editProductId').val(btn.data('product-id'));
+                $('#editProductName').val(card.find('.product-name-source').text().trim());
+
+                var price = card.find('.product-price-source').text().replace(' JD', '');
+                $('#editProductPrice').val(parseFloat(price).toFixed(2));
+
+                var img = card.find('.card-img-top img').attr('src');
+                $('#editProductNote').val(img); // Save old path for AJAX
+
+                // Set dropdown values
+                $('#editPetTypeId').val(btn.data('pet-type-id'));
+                $('#editBrandId').val(btn.data('brands-id'));
+                $('#editTypeId').val(btn.data('shop-type-id'));
+
+                new bootstrap.Modal(document.getElementById('editProductModal')).show();
+            });
+
+            // SAVE EDIT 
+            if ($('#editProductForm').length) {
+
+                $('#editProductForm').on('submit', function (e) {
+                    e.preventDefault();
+
+                    var saveBtn = $('#saveEditButton');
+                    saveBtn.prop('disabled', true).html('Saving...');
+
+                    var updatedProductDetails = {
+                        name: $('#editProductName').val(),
+                        price: parseFloat($('#editProductPrice').val()).toFixed(2),
+                        petTypeId: $('#editPetTypeId').val(),
+                        brandId: $('#editBrandId').val(),
+                        typeId: $('#editTypeId').val(),
+                        imagePath: $('#editProductNote').val() 
+                    };
+
+                    $.ajax({
+                        url: '@Url.Action("EditProduct", "AdminProducts")',
+                        type: 'POST',
+                        data: new FormData(this),
+                        processData: false,
+                        contentType: false,
+
+                        success: function (res) {
+
+                            bootstrap.Modal.getInstance(document.getElementById('editProductModal')).hide();
+
+                            if (!res.success) {
+                                showSimpleAlert(res.message, 'danger');
+                                return;
+                            }
+
+                            var id = $('#editProductId').val();
+                            var card = $('.edit-product-btn[data-product-id="' + id + '"]').closest('.card');
+
+                            card.find('.product-name-source').text(updatedProductDetails.name);
+                            card.find('.product-price-source').text(updatedProductDetails.price + ' JD');
+
+                            var editButton = card.find('.edit-product-btn');
+                            editButton.data('pet-type-id', updatedProductDetails.petTypeId);
+                            editButton.data('brands-id', updatedProductDetails.brandId);
+                            editButton.data('shop-type-id', updatedProductDetails.typeId);
+
+                            if (res.newImagePath) {
+                                card.find('img').attr('src', res.newImagePath);
+                                updatedProductDetails.imagePath = res.newImagePath; 
+                            }
+                            
+                            displaySuccessModal(updatedProductDetails);
+                        },
+
+                        error: function () {
+                            bootstrap.Modal.getInstance(document.getElementById('editProductModal')).hide();
+                            showSimpleAlert('Server error occurred', 'danger');
+                        },
+
+                        complete: function () {
+                            saveBtn.prop('disabled', false).html('<span>  <i class="fas fa-save " style="block-size:15px;"></i> <span style="font-size:20px"> Save Changes</span></span>');
+                        }
+                    });
+                });
+            }
+
+            // FUNCTION TO DISPLAY SUCCESS MODAL
+            function displaySuccessModal(details) {
+                var petTypeName = $(`#editPetTypeId option[value="${details.petTypeId}"]`).data('name').trim() || 'N/A';
+                var brandName = $(`#editBrandId option[value="${details.brandId}"]`).data('name').trim() || 'N/A';
+                var categoryName = $(`#editTypeId option[value="${details.typeId}"]`).data('name').trim() || 'N/A';
+
+                $('#successProductImage').attr('src', details.imagePath);
+                $('#successProductName').text(details.name);
+                $('#successProductPrice').text(details.price);
+                $('#successProductPetType').text(petTypeName);
+                $('#successProductBrand').text(brandName);
+                $('#successProductCategory').text(categoryName);
+
+                new bootstrap.Modal(document.getElementById('productDetailsModal')).show();
+            }
+
+            // DELETE PRODUCT (Modal Filler)
+            $(document).on('click', '.delete-product-btn', function (e) {
+                e.preventDefault();
+
+                var btn = $(this);
+                var card = btn.closest('.card');
+                var productId = btn.data('product-id');
+
+                var name = card.find('.product-name-source').text().trim();
+                var price = card.find('.product-price-source').text().trim();
+                var imagePath = card.find('.card-img-top img').attr('src');
+                
+                var editBtn = card.find('.edit-product-btn');
+                var petTypeId = editBtn.data('pet-type-id');
+                var brandId = editBtn.data('brands-id');
+                var typeId = editBtn.data('shop-type-id');
+                
+                var petTypeName = $(`#editPetTypeId option[value="${petTypeId}"]`).data('name').trim() || 'N/A';
+                var brandName = $(`#editBrandId option[value="${brandId}"]`).data('name').trim() || 'N/A';
+                var categoryName = $(`#editTypeId option[value="${typeId}"]`).data('name').trim() || 'N/A';
+
+
+                $('#productToDeleteId').val(productId);
+                $('#productName').text(name);
+                $('#productPrice').text(price);
+                $('#productImage').attr('src', imagePath);
+
+                $('#confirmDeleteButton').data({
+                    'product-id': productId,
+                    'name': name,
+                    'price': price.replace(' JD', ''),
+                    'image-path': imagePath,
+                    'pet-type-name': petTypeName,
+                    'brand-name': brandName,
+                    'category-name': categoryName
+                });
+
+                new bootstrap.Modal(document.getElementById('deleteConfirmationModal')).show();
+            });
+
+
+            // CONFIRM DELETE 
+            $('#confirmDeleteButton').on('click', function () {
+                var deleteBtn = $(this);
+                var productId = deleteBtn.data('product-id');
+                
+                var deletedProductDetails = deleteBtn.data(); 
+
+                deleteBtn.prop('disabled', true).html('Deleting...');
+
+                $.ajax({
+                    url: '@Url.Action("DeleteProduct", "AdminProducts")',
+                    type: 'POST',
+                    data: { id: productId },
+
+                    success: function (res) {
+                        bootstrap.Modal.getInstance(document.getElementById('deleteConfirmationModal')).hide();
+
+                        if (res.success) {
+                            $('.edit-product-btn[data-product-id="' + productId + '"]').closest('.col-md-6').remove();
+                            displayDeleteSuccessModal(deletedProductDetails);
+                        } else {
+                            showSimpleAlert(res.message, 'danger');
+                        }
+                    },
+
+                    error: function () {
+                        bootstrap.Modal.getInstance(document.getElementById('deleteConfirmationModal')).hide();
+                        showSimpleAlert('Server error occurred during deletion.', 'danger');
+                    },
+
+                    complete: function () {
+                        deleteBtn.prop('disabled', false).html('<i class="fas fa-trash-alt me-2"></i> Confirm Delete');
+                    }
+                });
+            });
+
+            // FUNCTION TO DISPLAY DELETE SUCCESS MODAL
+            function displayDeleteSuccessModal(details) {
+                
+                $('#deletedProductImage').attr('src', details.imagePath);
+                $('#deletedProductName').text(details.name);
+                $('#deletedProductPrice').text(parseFloat(details.price).toFixed(2) + ' JD');
+                $('#deletedProductPetType').text(details.petTypeName);
+                $('#deletedProductBrand').text(details.brandName);
+                $('#deletedProductCategory').text(details.categoryName);
+
+                new bootstrap.Modal(document.getElementById('deleteSuccessModal')).show();
+            }
+
+        });
+    </script>
+}

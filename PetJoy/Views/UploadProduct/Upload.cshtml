@@ -1,0 +1,542 @@
+﻿@model ShopProductViewModel
+
+@{
+    ViewBag.Title = "Upload Products";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #f0f4f8 0%, #d7e1ec 100%);
+        min-height: 100vh;
+    }
+
+    .main-container {
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+
+    .card-custom {
+        border: none;
+        border-radius: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 15px 35px rgba(30, 82, 135, 0.1);
+    }
+
+    .title-text {
+        color: #1e5287;
+        font-weight: 700;
+        font-family: 'Fredoka', sans-serif;
+        font-size: 2.2rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 12px;
+        border: 1px solid #e1e5ea;
+        padding: 1rem 0.75rem;
+        background-color: #fdfdfd;
+        height: 58px;
+        color: #1e5287;
+        font-weight: 500;
+        box-shadow: none;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #1e5287;
+            box-shadow: 0 0 0 4px rgba(30, 82, 135, 0.1);
+            background-color: #fff;
+        }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    .form-floating > label {
+        padding-left: 1.2rem;
+        color: #8898aa;
+        font-size: 0.95rem;
+        transition: all 0.2s ease-in-out;
+        pointer-events: none;
+    }
+
+        .form-floating > label > i {
+            color: #1e5287 !important;
+            font-weight: bold;
+            margin-right: 8px;
+            font-size: 1.1rem;
+            vertical-align: middle;
+        }
+
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label,
+    .form-floating > .form-select ~ label {
+        opacity: 1;
+        color: #1e5287;
+        transform: scale(0.85) translateY(-0.7rem) translateX(0.15rem);
+        font-weight: 600;
+        background-color: transparent;
+    }
+
+
+    .file-upload-wrapper {
+        position: relative;
+        height: 58px;
+        border: 1px dashed #1e5287;
+        border-radius: 12px;
+        background-color: #f8fbff;
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        transition: all 0.3s;
+    }
+
+        .file-upload-wrapper:hover {
+            background-color: #eef6ff;
+        }
+
+        .file-upload-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+    .file-upload-text {
+        color: #1e5287;
+        font-size: 0.9rem;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 500;
+    }
+
+    .btn-primary-custom {
+        background-color: #1e5287;
+        border: none;
+        border-radius: 12px;
+        padding: 15px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 15px rgba(30, 82, 135, 0.2);
+        transition: transform 0.2s;
+        color: #ffffff !important;
+    }
+
+        .btn-primary-custom:hover {
+            background-color: #163b61;
+            transform: translateY(-2px);
+            color: #ffffff !important;
+        }
+
+        .btn-primary-custom:active,
+        .btn-primary-custom:focus {
+            background-color: #1e5287 !important;
+        }
+
+
+    #productDetailModal .modal-dialog {
+        max-width: 400px;
+    }
+
+    #productDetailModal .modal-content {
+        border-radius: 20px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        border: none;
+    }
+
+    #productDetailModal .modal-header {
+        background-color: #1e5287;
+        color: white;
+        border-radius: 20px 20px 0 0;
+        border-bottom: none;
+        padding: 1.25rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #modalHeaderTitle {
+        font-family: 'Fredoka', sans-serif;
+        font-weight: 600;
+        font-size: 1.25rem;
+    }
+
+    #productDetailModal .modal-body {
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+
+    .product-image-container {
+        width: 90%;
+        height: 180px;
+        overflow: hidden;
+        border-radius: 15px;
+        margin: 0 auto 1.5rem;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+        border: 1px solid #e1e5ea;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .product-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+        }
+
+
+    #modalProductName {
+        color: #1e5287;
+        font-family: 'Fredoka', sans-serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+
+    .info-badge {
+        font-size: 0.8rem;
+        padding: 0.4em 0.8em;
+        border-radius: 50px;
+        font-weight: 500;
+        background-color: #e6eef6;
+        color: #1e5287;
+    }
+
+
+    #modalPriceContainer {
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px dashed #e1e5ea;
+    }
+
+    #modalPrice {
+        color: #1e5287;
+        font-family: 'Fredoka', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        display: block;
+    }
+
+
+    #productDetailModal .modal-footer {
+        border-top: none;
+        justify-content: center;
+        padding: 0 1.5rem 1.5rem;
+    }
+
+    #productDetailModal .btn-secondary {
+        border-radius: 12px;
+        font-weight: 600;
+        padding: 10px 20px;
+        background-color: #8898aa;
+        border: none;
+    }
+
+    .btn-custom-close {
+        background-color: #1e5287;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 8px 20px;
+        font-weight: 600;
+    }
+
+        .btn-custom-close:hover {
+            background-color: #163b61;
+            transform: translateY(-2px);
+            color: #ffffff !important;
+        }
+
+        .btn-custom-close:active,
+        .btn-custom-close:focus {
+            background-color: #1e5287 !important;
+        }
+
+    .invalid-feedback {
+        display: none;
+    }
+
+    .was-validated .invalid-feedback,
+    .was-validated .file-upload-wrapper:has(input:invalid) + .invalid-feedback {
+        display: block !important;
+    }
+
+</style>
+
+<div class="d-flex justify-content-center align-items-center main-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-9">
+
+                <div class="card card-custom p-4 p-md-5">
+                    <div class="text-center mb-3">
+                        <h2 class="title-text mb-2">
+                            <i class="bi bi-cloud-arrow-up-fill me-2"></i>Upload Pet Product
+                        </h2>
+                        <p class="text-muted">Fill in the details below to add a new item</p>
+                    </div>
+
+                    <form id="uploadProductForm" asp-action="Upload" asp-controller="UploadProduct" method="post" enctype="multipart/form-data">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input asp-for="Name" class="form-control" id="productName" placeholder="Name" required />
+                                    <label for="productName"><i class="bi bi-tag"></i>Product Name <span style="color:red">*</span></label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="PetTypeId" class="form-select" id="petType" required>
+                                        <option value="" selected disabled></option>
+                                        <option value="1" data-name="Cat">Cat</option>
+                                        <option value="2" data-name="Dog">Dog</option>
+                                        <option value="3" data-name="Fish">Fish</option>
+                                        <option value="4" data-name="Bird">Bird</option>
+                                        <option value="5" data-name="Small Pets">Small Pets</option>
+                                    </select>
+                                    <label for="petType"><i class="bi bi-heart"></i>Pet Type <span style="color:red">*</span></label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="BrandsId" class="form-select" id="brandSelect" required>
+                                        <option value="" selected disabled></option>
+                                        <option value="" data-name="No Brand">No Brand</option>
+                                        <option value="1" data-name="Royal Canin">Royal Canin</option>
+                                        <option value="2" data-name="Taste Of The Wild">Taste Of The Wild</option>
+                                        <option value="3" data-name="Monge">Monge</option>
+                                        <option value="4" data-name="Bewi Cat">Bewi Cat</option>
+                                        <option value="5" data-name="Montego">Montego</option>
+                                        <option value="6" data-name="Henrys">Henrys</option>
+                                        <option value="7" data-name="Duvo">Duvo</option>
+                                        <option value="8" data-name="Tetra">Tetra</option>
+                                        <option value="9" data-name="Harrison">Harrison</option>
+                                        <option value="10" data-name="Kiki Excellent">Kiki Excellent</option>
+                                    </select>
+                                    <label for="brandSelect"><i class="bi bi-award"></i>Brand <span style="color:red">*</span></label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="ShopTypeId" class="form-select" id="shopType" required>
+                                        <option value="" selected disabled></option>
+                                        <option value="1" data-name="Food">Food </option>
+                                        <option value="2" data-name="Clothes">Clothes</option>
+                                        <option value="3" data-name="Toys">Toys </option>
+                                        <option value="4" data-name="Litter">Litter </option>
+                                        <option value="5" data-name="Bowls & Containers">Bowls & Containers</option>
+                                        <option value="6" data-name="Collar">Collar </option>
+                                        <option value="7" data-name="Grooming">Grooming </option>
+                                        <option value="8" data-name="Beds">Beds</option>
+                                        <option value="9" data-name="Travel Crates">Travel Crates</option>
+                                        <option value="10" data-name="Cages">Cages</option>
+                                        <option value="11" data-name="Health & Wellness">Health & Wellness</option>
+                                        <option value="12" data-name="Aquariums">Aquariums</option>
+                                        <option value="13" data-name="Accessories">Accessories</option>
+                                    </select>
+                                    <label for="shopType"><i class="bi bi-shop"></i>Category <span style="color:red">*</span></label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Price" type="number" class="form-control" id="priceInput" placeholder="Price" min="0" step="0.01" required />
+                                    <label for="priceInput"><i class="bi bi-cash-stack"></i>Price <span style="color:red">*</span></label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="file-upload-wrapper mt-2">
+                                    <input asp-for="ProductImage"
+                                           type="file"
+                                           accept="image/*"
+                                           id="customFile"
+                                           onchange="updateFileName(this)"
+                                           required
+                                           class="form-control" />
+                                    <div class="file-upload-text">
+                                        <span>
+                                            <i class="bi bi-image me-2"></i>
+                                            <span id="fileNameText">Click to upload an image... <span style="color:red">*</span></span>
+                                        </span>
+                                        <i class="bi bi-cloud-upload"></i>
+                                    </div>
+                                </div>
+
+                                <div class="invalid-feedback">
+                                    Please upload an image
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-5">
+                                <button type="submit" class="btn btn-primary-custom w-100" id="uploadButton">
+                                    Upload Product
+                                </button>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <i class="bi bi-check-circle-fill me-2" style="font-size: 1.25rem;"></i>
+                    <span id="modalHeaderTitle"> Uploaded Successfully!</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="product-image-container">
+                    <img id="modalProductImage" src="#" alt="Product Image Preview" />
+                </div>
+
+                <h4 id="modalProductName">Product Name</h4>
+
+                <div class="d-flex justify-content-center flex-wrap gap-2 mb-3">
+                    <span class="badge info-badge" id="modalPetTypeBadge">
+                        <span id="modalPetType">Pet Type</span>
+                    </span>
+                    <span class="badge info-badge" id="modalBrandBadge">
+                        <span id="modalBrand">Brand</span>
+                    </span>
+                    <span class="badge info-badge" id="modalCategoryBadge">
+                        <span id="modalCategory">Category</span>
+                    </span>
+                </div>
+
+                <div id="modalPriceContainer">
+                    <span id="modalPrice">0.00 JD</span>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-custom-close" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function updateFileName(input) {
+        var textElement = document.getElementById('fileNameText');
+        if (input.files && input.files.length > 0) {
+            var fileName = input.files[0].name;
+            textElement.innerText = fileName;
+            textElement.style.color = "#1e5287";
+        } else {
+            textElement.innerText = "Click to upload an image...";
+            textElement.style.color = "";
+        }
+    }
+
+    $(document).ready(function () {
+        $('#uploadProductForm').on('submit', function (e) {
+
+            e.preventDefault(); 
+
+            // Check browser validation
+            if (!this.checkValidity()) {
+                this.classList.add('was-validated');
+                return;
+            }
+
+            var form = $(this);
+            var formData = new FormData(this);
+
+            // Get display names and values 
+            var petTypeName = $('#petType option:selected').data('name');
+            var brandName = $('#brandSelect option:selected').data('name') || 'No Brand';
+            var categoryName = $('#shopType option:selected').data('name');
+            var price = $('#priceInput').val();
+            var productName = $('#productName').val();
+
+            // Start loading state 
+            $('#uploadButton').text('Uploading...').prop('disabled', true);
+
+            var imageFile = $('#customFile')[0].files[0];
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                var imageUrl = e.target.result;
+
+                // Populate Modal Data 
+                $('#modalProductName').text(productName);
+                $('#modalPetType').text(petTypeName);
+                $('#modalBrand').text(brandName);
+                $('#modalCategory').text(categoryName);
+                $('#modalPrice').text(parseFloat(price).toFixed(2) + ' JD');
+                $('#modalProductImage').attr('src', imageUrl);
+
+                $.ajax({
+                    url: form.attr('asp-action'),
+                    type: form.attr('method'),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+
+                        $('#uploadButton').text('Upload Product').prop('disabled', false);
+
+                        var productModal = new bootstrap.Modal(document.getElementById('productDetailModal'));
+                        productModal.show();
+
+                        form[0].reset();
+                        $('#fileNameText').text('Click to upload an image...');
+                        form[0].classList.remove('was-validated');
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Upload failed! Please check server logs or network connection.");
+                        console.error("Upload error:", error);
+
+                        $('#uploadButton').text('Upload Product').prop('disabled', false);
+                    }
+                });
+            };
+
+            if (imageFile) {
+                reader.readAsDataURL(imageFile);
+            } else {
+            }
+        });
+    });
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

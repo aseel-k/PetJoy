@@ -1,0 +1,297 @@
+﻿@model PetJoy.Models.FilterSide
+@using Microsoft.AspNetCore.Http.Extensions
+
+@{
+    ViewData["Title"] = "Shop Products";
+
+    var currentSortOrder = Context.Request.Query["sortOrder"];
+
+    var currentSearchTerm = Context.Request.Query["search"];
+    
+    const string activeLinkClasses = "text-decoration-underline"; 
+    const string activeLinkStyle = "color:#89CFF0 !important;";
+    const string defaultLinkClasses = "text-dark text-decoration-none";
+}
+
+<div id="alertPlaceholder" class="container" style="position: fixed; top: 10px; right: 10px; z-index: 1050; max-width: 300px;">
+</div>
+<div class="container-fluid mb-5" style="padding-top: 40px;">
+    <div class="row">
+        
+        @* sidebar *@
+        <div class="col-lg-3 pe-4" style="padding-left: 40px;">
+            <aside class="sidebar">  
+                
+                <div class="mb-3">
+                    <a href="@Url.Action("ShopProduct")" class="btn btn-outline-secondary w-100">
+                        Clear Filters
+                    </a>
+                </div>
+
+                <div class="widget-product-categories mb-4">
+                    <h4 class="fs-4 fw-bold mb-3">Pet Type</h4>
+                    <ul class="product-categories sidebar-list list-unstyled">
+                        @{ 
+                            var isAllPetTypesActive = Model.SelectedPetTypeId == null;
+                            var allPetTypesClasses = isAllPetTypesActive ? activeLinkClasses : defaultLinkClasses; 
+                            var allPetTypesStyle = isAllPetTypesActive ? activeLinkStyle : ""; 
+                        }
+                        <li class="cat-item mb-2 @(isAllPetTypesActive ? "active" : "")">
+                            <a href="@Url.Action("ShopProduct", new { 
+                                brandId = Model.SelectedBrandId,
+                                typeId = Model.SelectedTypeId,
+                                sortOrder = currentSortOrder,
+                                search = currentSearchTerm
+                            })" class="@allPetTypesClasses d-block" style="@allPetTypesStyle">All</a>
+                        </li>
+                        
+                        @foreach (var pet in Model.PetTypes)
+                        {
+                            var isActive = Model.SelectedPetTypeId == pet.PetTypeId;
+                            var activeClass = isActive ? "active" : "";
+                            var linkClasses = isActive ? activeLinkClasses : defaultLinkClasses;
+                            var linkStyle = isActive ? activeLinkStyle : "";
+                            
+                            <li class="cat-item mb-2 @activeClass">
+                                <a href="@Url.Action("ShopProduct", new { 
+                                    petTypeId = pet.PetTypeId, 
+                                    brandId = Model.SelectedBrandId, 
+                                    sortOrder = currentSortOrder,
+                                    search = currentSearchTerm
+                                })" class="@linkClasses d-block" style="@linkStyle">@pet.Name</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="widget-product-brands mb-4">
+                    <h4 class="fs-4 fw-bold mb-3">Brand</h4>
+                    <ul class="product-tags sidebar-list list-unstyled">
+                        @{
+
+                            var allBrandsIsActive = String.IsNullOrEmpty(Context.Request.Query["brandId"]);
+                            var allBrandsClasses = allBrandsIsActive ? activeLinkClasses : defaultLinkClasses;
+                            var allBrandsStyle = allBrandsIsActive ? activeLinkStyle : "";
+                        }
+
+                        <li class="tags-item mb-2 @(allBrandsIsActive ? "active" : "")">
+                            <a href="@Url.Action("ShopProduct", new { 
+                                petTypeId = Context.Request.Query["petTypeId"], 
+                                sortOrder = currentSortOrder,
+                                search = currentSearchTerm
+                            })" class="@allBrandsClasses d-block" style="@allBrandsStyle">All</a>
+                        </li>
+
+                        @foreach (var brand in Model.Brands)
+                        {
+                            var isActive = Context.Request.Query["brandId"] == brand.BrandsId.ToString();
+                            var activeClass = isActive ? "active" : "";
+                            var linkClasses = isActive ? activeLinkClasses : defaultLinkClasses;
+                            var linkStyle = isActive ? activeLinkStyle : "";
+                            
+                            <li class="tags-item mb-2 @activeClass">
+                                <a href="@Url.Action("ShopProduct", new
+                                       {
+                                            petTypeId = Context.Request.Query["petTypeId"],
+                                            brandId = brand.BrandsId,
+                                            sortOrder = currentSortOrder,
+                                            search = currentSearchTerm
+                                       })" class="@linkClasses d-block" style="@linkStyle">
+                                    @brand.Name
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+            </aside>
+        </div>
+
+        <div class="col-lg-9 ps-4"> 
+             
+            @* sorting *@
+            <div class="d-flex justify-content-between align-items-center mb-4"> 
+                <p class="mb-0">Showing 1-@Model.Products.Count() of @Model.Products.Count() results</p>
+                <select id="sortDropdown" name="sortOrder" class="form-select w-auto">
+                    <option value="" selected>Default sorting</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                </select>
+            </div>
+            
+            @* cards *@
+            <div class="row">
+                @foreach (var item in Model.Products)
+                {
+                    <div class="col-md-6 col-lg-3 mb-4"> 
+                        <div class="card h-100 text-center border-0 shadow">
+                            <div class="card-img-top p-3 bg-white d-flex justify-content-center align-items-center"
+                                style="height: 250px;">
+                                <img src="@Url.Content(item.Note)"
+                                    class="img-fluid"
+                                    alt="@(item.Name ?? "Product Image")"
+                                    style="max-height: 100%; max-width: 100%; object-fit: contain;"
+                                    loading="lazy" />
+                            </div>
+                            
+                        <div class="card-body d-flex flex-column justify-content-between">
+                        <div class="card-content">
+                            <h5 class="card-title text-dark">@(item.Name ?? "Unnamed Product")</h5>
+                            <p class="card-text fw-bold text-dark">@(item.Price?.ToString("F2") ?? "N/A") JD</p>
+                        </div>
+
+
+                        <div class="mt-auto d-flex justify-content-center"> 
+                           <button class="btn text-white add-to-cart-btn"
+                           style="background-color: #15406b;"
+                          data-product-id="@item.ShopProductId">
+                               Add to cart
+                            </button>
+                        </div>
+                      </div>
+                  </div>
+               </div>
+
+                }
+            </div>
+
+            @* pagination *@
+            @{
+
+                int current = Model.CurrentPage;
+                int total = Model.TotalPages;
+
+                int startPage = Math.Max(1, current - 1);
+                int endPage = Math.Min(total, current + 1);
+            }
+            <nav class="mt-4" aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+
+                    <li class="page-item @(current == 1 ? "disabled" : "")">
+                        <a class="page-link"
+                            href="@Url.Action("ShopProduct", new { 
+                                page = current - 1, 
+                                petTypeId = Model.SelectedPetTypeId, 
+                                brandId = Model.SelectedBrandId,
+                                typeId = Model.SelectedTypeId,
+                                sortOrder = currentSortOrder, 
+                                search = currentSearchTerm 
+                            })">
+                            &lt;
+                        </a>
+                    </li>
+
+                    @for (int i = startPage; i <= endPage; i++)
+                    {
+                        <li class="page-item @(i == current ? "active" : "")">
+                            <a class="page-link"
+                                href="@Url.Action("ShopProduct", new { 
+                                    page = i, 
+                                    petTypeId = Model.SelectedPetTypeId, 
+                                    brandId = Model.SelectedBrandId,
+                                    typeId = Model.SelectedTypeId,
+                                    sortOrder = currentSortOrder, 
+                                    search = currentSearchTerm 
+                                })">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    <li class="page-item @(current == total ? "disabled" : "")">
+                        <a class="page-link"
+                            href="@Url.Action("ShopProduct", new { 
+                                page = current + 1, 
+                                petTypeId = Model.SelectedPetTypeId, 
+                                brandId = Model.SelectedBrandId,
+                                typeId = Model.SelectedTypeId,
+                                sortOrder = currentSortOrder, 
+                                search = currentSearchTerm 
+                            })">
+                            &gt;
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#sortDropdown').on('change', function () {
+                var sortValue = $(this).val(); 
+                
+                var currentUrl = new URL(window.location.href);
+                
+                if (sortValue) {
+                    currentUrl.searchParams.set('sortOrder', sortValue);
+                } else {
+                    currentUrl.searchParams.delete('sortOrder'); 
+                }
+                
+                window.location.href = currentUrl.href;
+            });
+            
+            var urlParams = new URLSearchParams(window.location.search);
+            var selectedSort = urlParams.get('sortOrder');
+            if (selectedSort) {
+                $('#sortDropdown').val(selectedSort);
+            }
+        });
+        
+        function showSuccessAlert(message, type = 'success') {
+            var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+            
+            var alertHtml = `
+                <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                     ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            $('#alertPlaceholder').append(alertHtml);
+             var newAlert = $('#alertPlaceholder').children().last();
+
+             var AddedItem = $(document).find("#cartCount").text();
+             var NewAddedItem = parseInt(AddedItem) +  1;
+			$(document).find("#cartCount").text(NewAddedItem);
+
+            setTimeout(function () {
+                newAlert.alert('close');
+            }, 1000);
+        }
+
+        $(document).on('click', '.add-to-cart-btn', function (e) {
+            e.preventDefault();
+            var button = $(this);
+            var productId = button.data('product-id');
+
+            button.prop('disabled', true).text('Adding...');
+
+            $.ajax({
+                url: '@Url.Action("AddToCart", "Cart")', 
+                type: 'POST',
+                data: { id: productId, quantity: 1 }, 
+                success: function (response) {
+                    if (response.success) {
+                        showSuccessAlert('Added to your cart!');
+                    } else {
+                        showSuccessAlert(response.message || 'Error adding item to cart.', 'danger');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    showSuccessAlert('An unexpected error occurred.', 'danger');
+                },
+                complete: function () {
+                    button.prop('disabled', false).text('Add to cart');
+                }
+            });
+        });
+
+    </script>
+}

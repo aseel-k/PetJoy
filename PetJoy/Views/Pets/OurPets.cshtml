@@ -1,0 +1,329 @@
+﻿@model PetJoy.Models.FilterSide
+@using Microsoft.AspNetCore.Http.Extensions
+
+@{
+    ViewData["Title"] = "Admin Pets";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var selectedAnimalId = Model.SelectedPetTypeId ?? 0;
+
+    var animalTypes = new Dictionary<int, string>
+    {
+        { 0, "Filter by Animal" },
+        { 1, "Cat" }, { 2, "Dog" }, { 3, "Fish" }, { 4, "Bird" }, { 5, "Small Pets" }
+    };
+}
+
+<style>
+    /* Pretty Card Design */
+    .pet-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+        .pet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+        }
+
+    .image-container {
+        height: 220px;
+        overflow: hidden;
+        background-color: #f8f9fa;
+        position: relative;
+    }
+
+    .pet-image-source {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .pet-card:hover .pet-image-source {
+        transform: scale(1.08);
+    }
+
+    .badge-animal {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        color: darkblue;
+        z-index: 2;
+    }
+</style>
+
+<div id="alertPlaceholder" class="container" style="position: fixed; top: 10px; right: 10px; z-index: 1050; max-width: 380px;"></div>
+
+<div class="container-fluid mb-5" style="padding-top:40px;">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 ps-4">
+
+            @* 2. Filter Section *@
+            <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 shadow-sm rounded-3">
+                <p class="mb-0 fw-bold" style="color: darkblue !important;">
+                    <i class="fas fa-paw me-2"></i>Showing @Model.Pets.Count() of @Model.TotalCount Results
+                </p>
+
+                <div class="d-flex gap-2">
+                    <select id="animalFilterDropdown" class="form-select w-auto">
+                        @foreach (var animal in animalTypes)
+                        {
+                            <option value="@animal.Key" @@(selectedAnimalId= =animal.Key ? "selected" : "" )>
+                                @animal.Value
+                            </option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            @* 3. Pet Cards Section *@
+            <div class="row">
+                @foreach (var pet in Model.Pets)
+                {
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                        <div class="card h-100 border-0 shadow-sm pet-card">
+                            <div class="image-container">
+                                <span class="badge-animal shadow-sm">@pet.Animal</span>
+                                <img src="@Url.Content(pet.Note)" class="pet-image-source" loading="lazy" />
+                            </div>
+
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="fw-bold text-center mb-1">@pet.PetName</h5>
+                                <p class="text-muted text-center small mb-3">@pet.Breed</p>
+
+                                <div class="pet-data d-none">
+                                    <span class="data-id">@pet.AdoptionId</span>
+                                    <span class="data-name">@pet.PetName</span>
+                                    <span class="data-animal">@pet.Animal</span>
+                                    <span class="data-breed">@pet.Breed</span>
+                                    <span class="data-age">@pet.Age</span>
+                                    <span class="data-gender">@pet.Gender</span>
+                                    <span class="data-medical">@pet.MedicalHistory</span>
+                                    <span class="data-desc">@pet.Description</span>
+                                    <span class="data-img">@Url.Content(pet.Note)</span>
+                                </div>
+
+                                <div class="mt-auto d-flex gap-2">
+                                    <button class="btn btn-sm w-100 text-white edit-pet-trigger" style="background-color:darkblue;">
+                                        <i class="fas fa-edit me-1"></i> Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger delete-pet-trigger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @* 4. Pagination *@
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                            <a class="page-link shadow-sm border-0 mx-1 rounded"
+                               href="@Url.Action("OurPets", new { page = i, petTypeId = selectedAnimalId })">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+@* MODALS *@
+
+<div class="modal fade" id="editPetModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 25px; overflow: hidden;">
+
+            @* 1. Premium Gradient Header *@
+            <div class="modal-header text-white border-0 p-4" style="background: linear-gradient(45deg, #00008b, #004080) !important;">
+                <div class="d-flex align-items-center">
+                    <div class="bg-white bg-opacity-25 rounded-circle p-2 me-3">
+                        <i class="fas fa-edit text-white"></i>
+                    </div>
+                    <h5 class="modal-title fw-bold text-white mb-0">Update Pet Profile</h5>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form id="editPetForm">
+                <div class="modal-body p-4 bg-light">
+                    <input type="hidden" name="AdoptionId" id="editId" />
+
+                    @* 2. Basic Info Section *@
+                    <div class="bg-white p-4 rounded-4 shadow-sm mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">Pet Name</label>
+                                <div class="input-group shadow-sm rounded-3">
+                                    <span class="input-group-text bg-white border-0"><i class="fas fa-signature text-dark"></i></span>
+                                    <input type="text" name="PetName" id="editName" class="form-control border-0 bg-white" placeholder="Enter name..." required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">Animal Type</label>
+                                <div class="input-group shadow-sm rounded-3">
+                                    <span class="input-group-text bg-white border-0"><i class="fas fa-paw text-dark"></i></span>
+                                    <select name="Animal" id="editAnimal" class="form-select border-0 bg-white">
+                                        <option value="Cat">Cat</option>
+                                        <option value="Dog">Dog</option>
+                                        <option value="Fish">Fish</option>
+                                        <option value="Bird">Bird</option>
+                                        <option value="Small Pets">Small Pets</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* 3. Details Section *@
+                    <div class="bg-white p-4 rounded-4 shadow-sm mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small text-muted">Breed</label>
+                                <div class="input-group shadow-sm rounded-3">
+                                    <span class="input-group-text bg-white border-0"><i class="fas fa-dna text-dark"></i></span>
+                                    <input type="text" name="Breed" id="editBreed" class="form-control border-0 bg-white" placeholder="e.g. Husky" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small text-muted">Age</label>
+                                <div class="input-group shadow-sm rounded-3">
+                                    <span class="input-group-text bg-white border-0"><i class="fas fa-birthday-cake text-dark"></i></span>
+                                    <input type="text" name="Age" id="editAge" class="form-control border-0 bg-white" placeholder="e.g. 2 Years" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small text-muted">Gender</label>
+                                <div class="input-group shadow-sm rounded-3">
+                                    <span class="input-group-text bg-white border-0"><i class="fas fa-venus-mars text-dark"></i></span>
+                                    <select name="Gender" id="editGender" class="form-select border-0 bg-white">
+                                        <option value="Female">Female</option>
+                                        <option value="Male">Male</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* 4. Textarea Section *@
+                    <div class="bg-white p-4 rounded-4 shadow-sm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-muted">Medical History</label>
+                            <textarea name="MedicalHistory" id="editMedical" class="form-control border-0 bg-light rounded-3" rows="2" placeholder="Describe vaccinations, health conditions..."></textarea>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label fw-bold small text-muted">Description</label>
+                            <textarea name="Description" id="editDesc" class="form-control border-0 bg-light rounded-3" rows="3" placeholder="Tell the pet's personality and story..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                @* 5. Clean Footer *@
+                <div class="modal-footer border-0 bg-white p-4 justify-content-between">
+                    <button type="button" class="btn btn-link text-muted fw-bold text-decoration-none" data-bs-dismiss="modal">Discard Changes</button>
+                    <button type="submit" class="btn px-5 py-2 text-white fw-bold shadow-sm" style="background-color: darkblue; border-radius: 12px; transition: all 0.3s;">
+                        <i class="fas fa-check-circle me-2 text-white"></i>Save Updates
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@* delete modal  *@
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 330px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 25px;">
+            <div class="modal-body p-4 d-flex flex-column align-items-center text-center">
+
+                <h4 class="fw-bold text-dark mb-1">Are You Sure?</h4>
+                <p class="text-muted small mb-3 px-2">Delete <strong id="deletePetName" class="text-dark"></strong></p>
+                <div class="mb-4">
+                    <img id="deletePetImage" src="" class="rounded-circle shadow-sm"
+                         style="width: 100px; height: 100px; object-fit: cover; border: 4px solid #f8f9fa;">
+                </div>
+                <input type="hidden" id="hiddenDeleteId" />
+                <div class="w-100">
+                    <button type="button" class="btn btn-danger w-100 py-2 fw-bold shadow-sm mb-2" id="btnFinalDelete"
+                            style="border-radius: 12px; background-color: #dc3545;">
+                        Yes, Delete
+                    </button>
+                    <button type="button" class="btn btn-link w-100 btn-sm text-muted text-decoration-none fw-bold"
+                            data-bs-dismiss="modal">
+                        No, Keep it
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // 1. FILTERING
+            $('#animalFilterDropdown').on('change', function () {
+                window.location.href = '@Url.Action("OurPets", "Pets")?petTypeId=' + $(this).val();
+            });
+
+            // 2. OPEN EDIT MODAL
+            $(document).on('click', '.edit-pet-trigger', function () {
+                var card = $(this).closest('.card');
+                var data = card.find('.pet-data');
+
+                $('#editId').val(data.find('.data-id').text().trim());
+                $('#editName').val(data.find('.data-name').text().trim());
+                $('#editAnimal').val(data.find('.data-animal').text().trim());
+                $('#editBreed').val(data.find('.data-breed').text().trim());
+                $('#editAge').val(data.find('.data-age').text().trim());
+                $('#editGender').val(data.find('.data-gender').text().trim());
+                $('#editMedical').val(data.find('.data-medical').text().trim());
+                $('#editDesc').val(data.find('.data-desc').text().trim());
+
+                new bootstrap.Modal(document.getElementById('editPetModal')).show();
+            });
+
+            // 3. OPEN DELETE MODAL
+            $(document).on('click', '.delete-pet-trigger', function () {
+                var card = $(this).closest('.card');
+                var data = card.find('.pet-data');
+
+                $('#hiddenDeleteId').val(data.find('.data-id').text().trim());
+                $('#deletePetName').text(data.find('.data-name').text().trim());
+                $('#deletePetImage').attr('src', data.find('.data-img').text().trim());
+
+                new bootstrap.Modal(document.getElementById('deleteConfirmationModal')).show();
+            });
+
+            // 4. SUBMIT EDIT
+            $('#editPetForm').submit(function (e) {
+                e.preventDefault();
+                $.post('@Url.Action("EditPet", "Pets")', $(this).serialize(), function (res) {
+                    if (res.success) location.reload();
+                    else alert("Error updating pet.");
+                });
+            });
+
+            // 5. SUBMIT DELETE
+            $('#btnFinalDelete').click(function () {
+                var id = $('#hiddenDeleteId').val();
+                $.post('@Url.Action("DeletePet", "Pets")', { id: id }, function (res) {
+                    if (res.success) location.reload();
+                    else alert("Error deleting pet.");
+                });
+            });
+        });
+    </script>
+}

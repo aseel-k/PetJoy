@@ -1,0 +1,274 @@
+﻿@{
+    ViewData["Title"] = "Pet Guidelines";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+<style>
+    body {
+        background-color: #e6f0fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #0b3d91;
+        overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .hero {
+        background: url('https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=1470&q=80') no-repeat center center;
+        background-size: cover;
+        color: white;
+        text-align: center;
+        padding: 100px 20px;
+        position: relative;
+        border-radius: 0 0 50px 50px;
+        margin-bottom: 30px;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(11, 61, 145, 0.6);
+        z-index: 1;
+        border-radius: 0 0 50px 50px;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .hero p {
+        font-size: 1.3rem;
+    }
+
+    /* Card Sections */
+    .guideline-card {
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        background: linear-gradient(145deg, #ffffff, #f0f7ff);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.5s, box-shadow 0.5s;
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+        .guideline-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(145deg, #d0e3ff, #ffffff);
+        }
+
+        /* visible class */
+        .guideline-card.visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        /* Heading styles */
+        .guideline-card h3 {
+            color: #1c3d7a;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+            /* Icons */
+            .guideline-card h3 i {
+                margin-right: 12px;
+                color: #4a90e2;
+                font-size: 1.8rem;
+                transition: transform 0.4s ease;
+            }
+
+        /* Icon hover animation */
+        .guideline-card:hover h3 i {
+            animation: iconBounce 0.6s ease;
+        }
+
+    @@keyframes iconBounce {
+        0% {
+            transform: translateY(0) rotate(0deg) scale(1);
+        }
+
+        30% {
+            transform: translateY(-5px) rotate(-5deg) scale(1.2);
+        }
+
+        60% {
+            transform: translateY(0) rotate(5deg) scale(1.1);
+        }
+
+        100% {
+            transform: translateY(0) rotate(0deg) scale(1);
+        }
+    }
+
+    /* Lists */
+    .guideline-card ul {
+        padding-left: 20px;
+    }
+
+        .guideline-card ul li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+</style>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1>PetJoy Care Guidelines</h1>
+        <p>Comprehensive tips for joyful, healthy, and safe pets</p>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+
+        <!-- At Home -->
+        <div class="col-md-6">
+            <div class="guideline-card">
+                <h3><i class="bi-house-fill"></i>Home Environment Care</h3>
+                <ul>
+                    <li>Safe and comfortable living space.</li>
+                    <li>Clean water and food daily.</li>
+                    <li>Mental stimulation with toys.</li>
+                    <li>Regular cleaning of bedding and litter.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Outdoors -->
+        <div class="col-md-6">
+            <div class="guideline-card">
+                <h3><i class="bi-tree-fill"></i>Outdoor Safety & Activity</h3>
+                <ul>
+                    <li>Supervised outdoor activities.</li>
+                    <li>Use leashes and secure fences.</li>
+                    <li>Shade and hydration for hot days.</li>
+                    <li>Avoid dangerous plants or objects.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- All Seasons -->
+        <div class="col-md-6">
+            <div class="guideline-card">
+                <h3><i class="bi-snow2"></i>Seasonal Care Tips</h3>
+                <ul>
+                    <li>Adjust shelter for weather.</li>
+                    <li>Protect against pests and allergies.</li>
+                    <li>Groom regularly to prevent skin issues.</li>
+                    <li>Hydration and temperature monitoring.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- When Sick -->
+        <div class="col-md-6">
+            <div class="guideline-card">
+                <h3><i class="bi-heart-pulse-fill"></i>Health & Medical Care</h3>
+                <ul>
+                    <li>Contact a veterinarian immediately.</li>
+                    <li>Isolate sick pets to prevent disease spread.</li>
+                    <li>Follow medication and care instructions.</li>
+                    <li>Provide a calm and warm environment.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Children at Home -->
+        <div class="col-md-6">
+            <div class="guideline-card">
+                <h3><i class="bi-emoji-smile-fill"></i>Kids & Pet Interaction</h3>
+                <ul>
+                    <li>Teach children gentle handling.</li>
+                    <li>Supervise all interactions.</li>
+                    <li>Set safe zones for pets.</li>
+                    <li>Educate kids on pet body language.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Travel & Transportation -->
+        <div class="col-md-6">
+            <div class="guideline-card">
+                <h3><i class="bi-truck"></i>Travel & Transportation</h3>
+                <ul>
+                    <li>Use carriers or seat belts for pets.</li>
+                    <li>Never leave pets alone in vehicles.</li>
+                    <li>Provide water and comfort during long trips.</li>
+                    <li>Plan rest stops for exercise and bathroom breaks.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Grooming & Hygiene -->
+        <div class="col-md-6">
+            <div class="guideline-card">
+                <h3><i class="bi-scissors"></i>Grooming & Clean Care</h3>
+                <ul>
+                    <li>Regular baths and brushing to prevent mats.</li>
+                    <li>Trim nails safely.</li>
+                    <li>Clean ears and teeth regularly.</li>
+                    <li>Check skin for fleas or infections.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Nutrition & Feeding -->
+        <div class="col-md-6">
+            <div class="guideline-card">
+                <h3><i class="bi-cup-straw"></i>Healthy Nutrition</h3>
+                <ul>
+                    <li>Provide a balanced diet according to species.</li>
+                    <li>Feed at regular times.</li>
+                    <li>Avoid human food that is toxic to pets.</li>
+                    <li>Monitor weight and health regularly.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Exercise & Play -->
+        <div class="col-md-12">
+            <div class="guideline-card">
+                <h3><i class="bi-dribbble"></i>Exercise & Play</h3>
+                <ul>
+                    <li>Daily walks or play sessions.</li>
+                    <li>Interactive toys to stimulate the mind.</li>
+                    <li>Safe outdoor exploration for enrichment.</li>
+                    <li>Adjust activity level based on age and health.</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Animate cards on scroll
+    const cards = document.querySelectorAll('.guideline-card');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    cards.forEach(card => observer.observe(card));
+</script>

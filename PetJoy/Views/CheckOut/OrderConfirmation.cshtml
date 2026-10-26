@@ -1,0 +1,492 @@
+﻿@model PetJoy.Models.CheckOut
+
+@{
+	ViewData["Title"] = "Order Confirmed";
+	var primaryColor = "#15406b"; 
+	var primaryAccent = "#28a745"; 
+	var secondaryTextColor = "#6c757d"; 
+	var borderColor = "#e2e3e5";
+}
+
+<style>
+
+	/* Global Styles */
+		body {
+				background: #f5f6f8;
+				color: #333;
+
+	}
+
+
+	/* Main Container */
+		.container-custom {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 40px 15px;
+
+	}
+
+
+	/* --- TOP HEADER (Order ID and Status) --- */
+		.order-header-main {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-end;
+				margin-bottom: 25px;
+
+	}
+
+		.header-details-left {
+				padding-left: 15px; /* Alignment with the content below */
+
+	}
+
+		.header-order-id {
+				font-size: 1.8rem;
+				font-weight: 700;
+				color: #1a1a1a;
+				margin-bottom: 5px;
+
+	}
+
+		.header-status {
+				font-size: 1rem;
+				color: @secondaryTextColor;
+				font-weight: 600;
+
+	}
+
+		.buy-again-button {
+				background: #fff;
+				border: 1px solid @borderColor;
+				color: @primaryColor;
+				padding: 8px 20px;
+				border-radius: 8px;
+				text-decoration: none;
+				font-weight: 600;
+				transition: background 0.2s;
+
+	}
+
+			.buy-again-button:hover {
+					background: #f0f0f0;
+
+	}
+
+
+	/* --- MAIN TWO-COLUMN WRAPPER --- */
+		.order-confirmation-wrapper {
+				display: flex;
+				gap: 30px;
+
+	}
+
+
+	/* Left Column for Details */
+		.order-details-col {
+				flex: 1;
+
+	}
+
+
+	/* Right Column for Summary/Items */
+		.order-summary-col {
+				width: 380px;
+				flex-shrink: 0;
+
+	}
+
+
+	/* General Card Styling (applies to both left/right) */
+		.info-card {
+				background: #fff;
+				border-radius: 12px;
+				border: 2px solid @borderColor;
+				padding: 25px;
+				margin-bottom: 25px;
+				box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+
+	}
+
+		.sticky-summary {
+				position: sticky;
+				top: 25px;
+				min-height: 200px;
+
+	}
+
+
+	/* --- LEFT COLUMN CONTENT STYLING --- */
+
+	/* Contact/Shipping/Payment Block */
+		.details-block-grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr; /* Two columns for Payment/Contact */
+				gap: 20px;
+				padding-bottom: 20px;
+
+	}
+
+		.shipping-method-section {
+				border-top: 1px solid #f0f0f0;
+				padding-top: 20px;
+				margin-top: 5px;
+
+	}
+
+		.card-title {
+				font-size: 1.1rem;
+				font-weight: 700;
+				margin-bottom: 12px;
+				color: black;
+
+	}
+
+		.info-row {
+				margin-bottom: 5px;
+				color: #555;
+				font-size: 1.00rem;
+				line-height: 1.4;
+				font-weight: 500;
+
+	}
+
+		
+
+
+	/* Status and Total Block (Top right of details card, matches reference) */
+		.top-detail-summary {
+				border-bottom: 1px solid #f0f0f0;
+				padding-bottom: 20px;
+				margin-bottom: 20px;
+
+	}
+
+		.detail-total-amount {
+				font-size: 1.4rem;
+				font-weight: 700;
+				color: @primaryColor;
+
+	}
+
+		.pending-notice {
+				font-size: 0.9rem;
+				color: #d9534f; /* Error/warning red */
+				margin-top: 5px;
+
+	}
+
+
+
+	/* --- ITEMS & TOTALS --- */
+
+		.product-list-container {
+				max-height: 240px; 
+				overflow-y: auto !important;
+				padding-right: 15px; /* Space for scrollbar */
+				margin-bottom: 20px;
+
+	}
+
+			.product-list-container::-webkit-scrollbar {
+					width: 8px; /* Adjusted to 8px */
+
+	}
+
+			.product-list-container::-webkit-scrollbar-thumb {
+					background-color: #c9c9c9; 
+					border-radius: 4px; 
+
+	}
+
+		.product-item {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start; 
+				margin-bottom: 15px;
+				padding-bottom: 15px;
+				border-bottom: 1px dashed #eee; 
+
+	}
+
+			.product-item:last-child {
+					border-bottom: none;
+					margin-bottom: 0;
+					padding-bottom: 0;
+
+	}
+
+		.product-details-left {
+				display: flex;
+				align-items: flex-start;
+				gap: 15px;
+				padding-top: 8px;
+
+	}
+
+		.product-img-wrapper {
+				position: relative;
+				width: 65px; 
+				height: 65px; 
+				flex-shrink: 0;
+
+	}
+
+			.product-img-wrapper img {
+					width: 100%;
+					height: 100%;
+					object-fit: contain;
+					border-radius: 6px;
+					border: 1px solid #f0f0f0;
+					background-color: #fff; 
+
+	}
+
+		.qty-badge {
+				position: absolute;
+				top: -5px;
+				right: -5px; 
+				background: @primaryColor;
+				color: white;
+				font-size: 10px;
+				font-weight: 700;
+				width: 18px;
+				height: 18px;
+				border-radius: 50%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				z-index: 10;
+				box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+
+	}
+
+		.product-info {
+				padding-top: 2px;
+
+	}
+
+		.product-name {
+				font-weight: 600;
+				font-size: 0.95rem;
+				color: #1a1a1a;
+				line-height: 1.3;
+
+	}
+
+		.product-subtext {
+				color: @secondaryTextColor;
+				font-size: 0.8rem;
+				margin-top: 2px;
+
+	}
+
+		.product-total-price {
+				font-weight: 600;
+				font-size: 1rem;
+				color: #1a1a1a;
+				flex-shrink: 0;
+				margin-left: 40px;
+				font-weight: 500;
+	}
+
+
+	/* Summary Totals */
+		.summary-totals {
+				padding-top: 15px;
+
+	}
+
+		.total-row {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 5px 0;
+				font-size: 1rem;
+				color: #555;
+				font-weight: 500;
+
+
+	}
+
+		.grand-total-row {
+				margin-top: 10px;
+				padding-top: 10px;
+				font-size: 1.2rem;
+				font-weight: 700;
+				color: #1a1a1a;
+				border-top: 1px solid #f0f0f0;
+
+	
+
+	}
+
+
+
+		@@media (max-width: 992px) {
+				.order-confirmation-wrapper
+
+	{
+					flex-direction: column;
+					gap: 0;
+
+	}
+
+			.order-summary-col, .order-details-col {
+					width: 100%;
+
+	}
+
+			.details-block-grid {
+					grid-template-columns: 1fr;
+
+	}
+
+
+	}
+</style>
+
+
+<div class="container-custom">
+
+	@* --- TOP HEADER (Order ID, Status, Buy Again Button) --- *@
+	<div class="order-header-main">
+		<div class="header-details-left">
+			<div class="header-order-id">
+				Order #@Model.ShopOrderMasterId
+			</div>
+		</div>
+	</div>
+
+
+	<div class="order-confirmation-wrapper">
+
+		@* --- LEFT COLUMN: DETAILS & SHIPPING --- *@
+		<div class="order-details-col">
+			<div class="info-card">
+
+				<div class="top-detail-summary">
+					<div class="d-flex justify-content-between align-items-center">
+						<div>
+							<div class="info-row" style="color:@primaryAccent; font-weight:600;">Confirmed</div>
+							<div class="info-row" style="font-size:0.9rem;">@Model.ShopOrderMaster?.OrderDate.ToString("MMM d")</div>
+						</div>
+					</div>
+
+					@if (Model.ShopOrderMaster?.PaymentMethod?.PaymentMethodName == "Cash on Delivery (COD)")
+					{
+						<div class="pending-notice">
+							This order has a pending payment.
+						</div>
+					}
+				</div>
+
+
+				@* Contact & Payment  *@
+				<div class="details-block-grid">
+					<div>
+						<div class="card-title">Contact Information</div>
+						<div class="info-row fw-bold">@Model.FirstName @Model.LastName</div>
+						<div class="info-row">@Model.Email</div>
+						<div class="info-row">@Model.PhoneNumber</div>
+					</div>
+
+					<div>
+						<div class="card-title">Payment</div>
+						<div class="info-row ">
+							@Model.ShopOrderMaster?.PaymentMethod?.PaymentMethodName
+						</div>
+						<div class="info-row">
+							JD @Model.ShopOrderMaster.TotalPrice.ToString("N2")
+						</div>
+						<div class="info-row text-muted" style="font-size:0.85rem;">
+							@Model.ShopOrderMaster?.OrderDate.ToString("MMM d")
+						</div>
+					</div>
+				</div>
+
+				@* Shipping Address *@
+				<div class="details-section">
+					<div class="card-title">Shipping Address</div>
+					<div class="info-row fw-bold">@Model.FirstName @Model.LastName</div>
+					<div class="info-row">@Model.Address</div>
+
+					@if (!string.IsNullOrEmpty(Model.Apartment))
+					{
+						<div class="info-row">@Model.Apartment</div>
+					}
+
+					<div class="info-row">@Model.City, @Model.Country</div>
+					<div class="info-row">
+						@if (!string.IsNullOrEmpty(Model.PostalCode))
+						{
+							<span>@Model.PostalCode</span>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		@* --- ORDER SUMMARY (ITEMS & TOTALS) --- *@
+		<div class="order-summary-col">
+			<div class="info-card">
+
+				<h2 class="card-title" style="margin-bottom: 20px;">Order Summary</h2>
+
+				@* Scrollable Product List (Scrabble Items) *@
+				<div class="product-list-container">
+					@if (Model.OrderItems != null && Model.OrderItems.Any())
+					{
+						foreach (var item in Model.OrderItems)
+						{
+							<div class="product-item">
+								<div class="product-details-left">
+									<div class="product-img-wrapper">
+										<img src="@item.ShopProduct.Note"
+											                        alt="@item.ShopProduct.Name"
+											                        class="product-img" />
+										<div class="qty-badge">@item.Quantity</div>
+									</div>
+									<div class="product-info">
+										<div class="product-name">@item.ShopProduct.Name</div>
+										<div class="product-subtext">@item.UnitPrice.ToString("N2") JD </div>
+									</div>
+								</div>
+
+								@* Total for this line item *@
+								<div class="product-total-price">
+									JD @((item.UnitPrice * item.Quantity).ToString("N2"))
+								</div>
+							</div>
+						}
+					}
+					else
+					{
+						<div class="text-center text-muted py-4">No items were found in this order.</div>
+					}
+				</div>
+
+
+				@* Totals Section *@
+				<div class="summary-totals">
+					<div class="total-row">
+						<span class="total-label">Subtotal</span>
+						<span>JD @Model.ShopOrderMaster.SubTotal.ToString("N2")</span>
+					</div>
+					<div class="total-row">
+						<span class="total-label">Shipping</span>
+						<span>JD @Model.ShopOrderMaster.ShippingCost.ToString("N2")</span>
+					</div>
+
+					<div class="total-row grand-total-row">
+						<span class="grand-total-label">Total</span>
+						<span class="grand-total-label">JD @Model.ShopOrderMaster.TotalPrice.ToString("N2")</span>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+</div>

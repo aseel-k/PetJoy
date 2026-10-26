@@ -1,0 +1,718 @@
+﻿@model PetJoy.Models.CheckOut
+@using System.Linq
+
+@{
+	ViewData["Title"] = "Order Summary";
+
+	decimal subtotal = Model.CartItems?.Sum(item => item.Price * item.Quantity) ?? 0;
+	decimal shippingCost = Model.ShippingCost;
+	decimal total = subtotal + shippingCost;
+	string currency = "JD";
+}
+
+
+<style>
+
+	html, body {
+		height: 100%;
+		margin: 0;
+		padding: 0;
+	}
+
+	body {
+		background-color: #f8f8f8 !important;
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+		color: #1a1a1a;
+		overflow-x: hidden;
+		display: flex;
+		flex-direction: column;
+		padding-top: 80px !important;
+	}
+
+	.checkout-container {
+		width: 90%;
+		max-width: 1200px;
+		margin: 0 auto;
+		flex-grow: 1;
+		min-height: calc(100vh - 70px);
+		height: 100%;
+		background: #fff;
+		border-radius: 0;
+		box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+		display: flex;
+		align-items: stretch;
+		overflow: hidden;
+	}
+
+	.container {
+		max-width: none !important;
+		width: 100%;
+		padding: 0;
+	}
+
+	.col-left {
+		flex: 1;
+		padding: 30px 30px 30px 40px;
+		border-right: 1px solid #f0f0f0;
+		overflow-y: visible;
+	}
+
+
+
+	.col-right {
+		max-width: 650px;
+		width: 100%;
+		padding: 30px 50px;
+		background: #e0f2ff;
+		flex-shrink: 0;
+		overflow-y: auto;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+
+
+
+	.order-summary {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+
+
+
+	.product-list-container {
+		max-height: 240px;
+		flex-grow: 0;
+		flex-shrink: 0;
+		overflow-y: auto !important;
+		padding-right: 10px;
+		padding-top: 8px;
+	}
+
+		.product-list-container::-webkit-scrollbar {
+			width: 8px;
+		}
+
+		.product-list-container::-webkit-scrollbar-thumb {
+			background-color: #c9c9c9;
+			border-radius: 4px;
+		}
+
+
+	h2 {
+		font-size: 20px;
+		font-weight: 600;
+		margin-bottom: 20px !important;
+		color: #333;
+		flex-shrink: 0;
+	}
+
+	.form-control, .form-select {
+		background: #fff !important;
+		border: 2px solid #e0e0e0 !important;
+		border-radius: 16px !important;
+		height: 45px !important;
+		font-size: 15px !important;
+		padding: 8px 15px !important;
+		box-shadow: none !important;
+		color: #1a1a1a;
+		font-weight: 500;
+	}
+
+	.invalid-feedback {
+		font-size: 13px;
+		font-weight: 500;
+	}
+
+
+	.product-item {
+		display: flex;
+		align-items: center;
+		margin-bottom: 15px;
+		padding-bottom: 15px;
+		border-bottom: 1px solid #eee;
+	}
+
+		.product-item img {
+			width: 65px;
+			height: 65px;
+			object-fit: contain;
+			border-radius: 6px;
+			margin-right: 15px;
+			flex-shrink: 0;
+			background-color: #fff;
+		}
+
+		.product-item .product-details {
+			flex-grow: 1;
+			display: flex;
+			flex-direction: column;
+			padding-top: 0;
+		}
+
+			.product-item .product-details .name {
+				font-weight: 500;
+				font-size: 15px;
+				color: #333;
+				line-height: 1.3;
+				margin-bottom: 2px;
+			}
+
+			.product-item .product-details .price {
+				font-size: 15px;
+				color: #666;
+				font-weight: 500;
+			}
+
+		.product-item .product-quantity {
+			flex-shrink: 0;
+			margin-left: auto;
+			padding-top: 0;
+			font-weight: 600;
+			font-size: 16px;
+			color: #333;
+		}
+
+	.summary-totals {
+		margin-top: 15px;
+		padding-top: 10px;
+		border-top: 1px solid #eee;
+		font-size: 17px;
+		font-weight: 400;
+		flex-shrink: 0;
+	}
+
+	.summary-row {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 5px;
+	}
+
+		.summary-row.total-row {
+			font-weight: 700;
+			font-size: 18px;
+			margin-top: 10px;
+		}
+
+	.confirm-button {
+		width: 100%;
+		max-width: 400px;
+		padding: 12px;
+		border: none;
+		border-radius: 15px;
+		font-size: 16px;
+		font-weight: 600;
+		cursor: pointer;
+		margin-top: 25px;
+		flex-shrink: 0;
+		background-color: rgb(0, 86, 150) !important;
+		color: white;
+	}
+
+
+	.confirm-button-container {
+		display: flex;
+		justify-content: flex-start;
+		margin-top: 20px;
+	}
+
+	.confirm-button:hover {
+		background-color: rgb(0, 86, 150) !important;
+	}
+
+	.btn-primary {
+		background-color: rgb(3, 107, 187) !important;
+		border-color: rgb(3, 107, 187) !important;
+	}
+
+		.btn-primary:hover {
+			background-color: rgb(0, 86, 150) !important;
+			border-color: rgb(0, 86, 150) !important;
+		}
+
+
+	.form-floating > .form-control {
+		height: 60px !important;
+		padding: 1.2rem 1rem .5rem !important;
+		line-height: 1.6 !important;
+		font-size: 16px !important;
+	}
+
+	.form-floating > label {
+		padding: .75rem 1rem !important;
+		font-size: 14px !important;
+	}
+
+	.form-check-input:checked {
+		border-color: #15406b !important;
+		box-shadow: none !important;
+	}
+
+	.form-check-input {
+		border: 2px solid #15406b !important;
+	}
+
+	.form-check-label {
+		color: #000 !important;
+	}
+
+
+	.form-check-input:checked {
+		background-color: #15406b !important;
+		border-color: #15406b !important;
+		box-shadow: none !important;
+	}
+
+
+
+	.product-img-wrapper {
+		position: relative;
+		width: 65px;
+		height: 65px;
+		margin-right: 15px;
+	}
+
+	.qty-badge {
+		position: absolute;
+		top: -6px;
+		right: -6px;
+		background: #15406b;
+		color: white;
+		font-size: 10px;
+		font-weight: 700;
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+</style>
+
+<div class="container checkout-container">
+	<div class="col-left">
+		@* start for Stripe *@
+		<form id="payment-form" asp-action="PlaceOrder" method="post" class="needs-validation" novalidate>
+			@* end for Stripe *@
+			<h2 class="mb-4">Contact</h2>
+			<div class="row g-3 mb-5">
+
+				<!-- First Name -->
+				<div class="col-md-6">
+					<div class="form-floating">
+						<input asp-for="FirstName" class="form-control" placeholder="First Name" required />
+						<label asp-for="FirstName">First Name <span style="color:red">*</span></label>
+
+						<div class="invalid-feedback">
+							Enter your first name.
+						</div>
+					</div>
+				</div>
+
+				<!-- Last Name -->
+				<div class="col-md-6">
+					<div class="form-floating">
+						<input asp-for="LastName" class="form-control" placeholder="Last Name" required />
+						<label asp-for="LastName">Last Name <span style="color:red">*</span></label>
+
+						<div class="invalid-feedback">
+							Enter your last name.
+						</div>
+					</div>
+				</div>
+
+				<!-- Email -->
+				<div class="col-md-6">
+					<div class="form-floating">
+						<input asp-for="Email" class="form-control" placeholder="Email" required />
+						<label asp-for="Email">Email <span style="color:red">*</span></label>
+
+						<div class="invalid-feedback">
+							Enter a valid email.
+						</div>
+					</div>
+				</div>
+
+				<!-- Phone -->
+				<div class="col-md-6">
+					<div class="form-floating">
+						<input asp-for="PhoneNumber" class="form-control" placeholder="Phone Number" required />
+						<label asp-for="PhoneNumber">Phone Number <span style="color:red">*</span></label>
+
+						<div class="invalid-feedback">
+							Enter your phone number.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			@* Delivery *@
+			<h2 class="mb-4">Delivery</h2>
+			<div class="row g-3 mb-5">
+				<div class="form-floating mb-1">
+					<input asp-for="Address" class="form-control" placeholder="Address" required />
+					<label asp-for="Address">Address <span style="color:red">*</span> </label>
+
+					<div class="invalid-feedback">Enter your shipping address.</div>
+				</div>
+
+				<div class="row g-3">
+					<div class="col-md-6">
+						<div class="form-floating mb-3">
+							<input asp-for="Country" class="form-control" value="Jordan" readonly />
+							<label asp-for="Country">Country <span style="color:red">*</span></label>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="form-floating">
+							<input asp-for="PostalCode" class="form-control" placeholder="Postal Code" />
+							<label asp-for="PostalCode">Postal Code </label>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-floating mb-3">
+					<input asp-for="Apartment" class="form-control" placeholder="Apartment" />
+					<label asp-for="Apartment">Apartment  </label>
+				</div>
+
+				<div class="col-12">
+					<label for="City" class="form-label">City <span style="color:red">*</span></label>
+					<select asp-for="City" class="form-select" required>
+						<option value="" disabled selected hidden>Select a City</option>
+						<option>Amman</option>
+						<option>Balqa</option>
+						<option>Irbid</option>
+						<option>Jerash</option>
+						<option>Ajloun</option>
+						<option>Karak</option>
+						<option>Mafraq</option>
+						<option>Zarqa</option>
+						<option>Madaba</option>
+						<option>Tafilah</option>
+						<option>Ma'an</option>
+						<option>Aqaba</option>
+					</select>
+
+					<div class="invalid-feedback">
+						Select a valid city.
+					</div>
+				</div>
+			</div>
+
+			@* Payment Method *@
+			<h2 class="mb-4">Payment Method <span style="color:red">*</span></h2>
+			<div class="payment-options d-flex gap-5">
+				<div class="form-check">
+					<input asp-for="SelectedPaymentMethodId" class="form-check-input" type="radio" value="2" id="onlinePayment" />
+					<label class="form-check-label" for="onlinePayment">Credit Card </label>
+				</div>
+				<div class="form-check">
+					<input asp-for="SelectedPaymentMethodId" class="form-check-input" type="radio" value="1" id="cashOnDelivery" checked />
+					<label class="form-check-label" for="cashOnDelivery">Cash on Delivery</label>
+				</div>
+			</div>
+
+			@* start for Stripe *@
+			@* <div id="creditCardFields" style="padding-top: 20px; margin-top: 20px;">
+				<div class="row g-3">
+					<div class="col-md-6">
+						<label asp-for="CardNumber" class="form-label">Card Number</label>
+						<input asp-for="CardNumber" class="form-control" placeholder="" />
+						<div class="invalid-feedback">
+							Card number is required.
+						</div>
+					</div>
+					<div class="col-md-6">
+						<label asp-for="CardHolder" class="form-label">Card Holder</label>
+						<input asp-for="CardHolder" class="form-control" placeholder="" />
+					</div>
+					<div class="col-md-6">
+						<label asp-for="ExpiryDate" class="form-label">Expiry Date</label>
+						<input asp-for="ExpiryDate" class="form-control" placeholder="MM/YY" />
+						<div class="invalid-feedback">
+							Expiry date is required.
+						</div>
+
+					</div>
+					<div class="col-md-6">
+						<label asp-for="CardCvv" class="form-label">CVV</label>
+						<input asp-for="CardCvv" class="form-control" placeholder="" />
+						<div class="invalid-feedback">
+							CVV is required.
+						</div>
+					</div>
+				</div>
+			</div> *@
+			<div id="stripeCardBox" style="display:none; padding-top:20px; margin-top:20px;">
+				<div class="row g-3">
+					<div class="col-md-6">
+						<label class="form-label">Card number<span style="color:red">*</span></label>
+						<div id="card-number" class="form-control" style="padding:12px;"></div>
+					</div>
+
+					<div class="col-md-3">
+						<label class="form-label">Expiration date<span style="color:red">*</span></label>
+						<div id="card-expiry" class="form-control" style="padding:12px;"></div>
+					</div>
+
+					<div class="col-md-3">
+						<label class="form-label">Security code<span style="color:red">*</span></label>
+						<div id="card-cvc" class="form-control" style="padding:12px;"></div>
+					</div>
+				</div>
+				<div id="stripe-error" style="margin-top:10px;color:#b00020;"></div>
+			</div>
+			@* end for Stripe *@
+
+			@* Place Order btn *@
+			<div class="confirm-button-container">
+				<button asp-action="PlaceOrder" class="btn btn-primary confirm-button" id="submitButton" type="submit">
+					Confirm order
+				</button>
+			</div>
+
+		</form>
+	</div>
+
+	<div class="col-right">
+		<div class="order-summary">
+			<h2 class="mb-4">Order Summary</h2>
+			<div class="product-list-container">
+				@if (Model.CartItems != null && Model.CartItems.Any())
+				{
+					foreach (var item in Model.CartItems)
+					{
+						<div class="product-item">
+							<div class="product-img-wrapper">
+								<img src="@item.Note" alt="@item.ProductName" />
+								<div class="qty-badge">@item.Quantity</div>
+							</div>
+							<div class="product-details">
+								<div class="name">@item.ProductName</div>
+								<div class="price">@currency @item.Price.ToString("N2")</div>
+							</div>
+						</div>
+					}
+				}
+			</div>
+
+			<div class="summary-totals">
+				<div class="summary-row">
+					<span>Subtotal</span>
+					<h3>@currency @subtotal.ToString("N2")</h3>
+				</div>
+				<div class="summary-row">
+					<span>Shipping</span>
+					<h3>@currency @shippingCost.ToString("N2")</h3>
+				</div>
+				<div class="summary-row total-row">
+					<span>Total (@currency)</span>
+					<h1>@currency @total.ToString("N2")</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@* for Stripe *@
+@section Scripts {
+	@* @await Html.PartialAsync("_ValidationScriptsPartial") *@
+
+	<script>
+		// =========================
+		// OLD creditCardFields SCRIPT (DISABLED)
+		// السبب: creditCardFields element لم يعد موجود (استبدلناه بـ stripeCardBox)
+		// وأيضاً input[name="PaymentMethod"] غير موجود عندك
+		// =========================
+
+		/*
+		function toggleCreditCardFields() {
+			const onlinePaymentRadio = document.getElementById('onlinePayment');
+			const creditCardFieldsDiv = document.getElementById('creditCardFields');
+			const cardInputs = creditCardFieldsDiv.querySelectorAll('input');
+
+			if (onlinePaymentRadio.checked) {
+				creditCardFieldsDiv.style.display = 'block';
+				cardInputs.forEach(input => input.setAttribute('required', 'required'));
+			} else {
+				creditCardFieldsDiv.style.display = 'none';
+				cardInputs.forEach(input => {
+					input.removeAttribute('required');
+					input.value = '';
+					input.classList.remove('is-invalid');
+					input.classList.remove('is-valid');
+				});
+			}
+		}
+
+		document.querySelectorAll('input[name="PaymentMethod"]').forEach(radio => {
+			radio.addEventListener('change', toggleCreditCardFields);
+		});
+
+		toggleCreditCardFields();
+		*/
+
+		// =========================
+		// KEEP: Bootstrap validation (safe)
+		// =========================
+		(function () {
+			'use strict';
+			var forms = document.querySelectorAll('.needs-validation');
+			Array.prototype.slice.call(forms).forEach(function (form) {
+				form.addEventListener('submit', function (event) {
+					if (!form.checkValidity()) {
+						event.preventDefault();
+						event.stopPropagation();
+					}
+					form.classList.add('was-validated');
+				}, false);
+			});
+		})();
+	</script>
+
+	<script>
+		// =========================
+		// OLD toggle script (DISABLED)
+		// السبب: creditCardFields element لم يعد موجود
+		// Stripe script تحت هو اللي صار مسؤول عن show/hide
+		// =========================
+
+		/*
+		document.addEventListener("DOMContentLoaded", function () {
+			const creditCardRadio = document.getElementById("onlinePayment");
+			const codRadio = document.getElementById("cashOnDelivery");
+			const creditCardFields = document.getElementById("creditCardFields");
+
+			function toggleCreditCardFields() {
+				if (creditCardRadio.checked) {
+					creditCardFields.style.display = "block";
+					creditCardFields.querySelectorAll("input").forEach(input => {
+						input.disabled = false;
+						input.required = true;
+					});
+				} else {
+					creditCardFields.style.display = "none";
+					creditCardFields.querySelectorAll("input").forEach(input => {
+						input.disabled = true;
+						input.required = false;
+						input.value = "";
+					});
+				}
+			}
+
+			toggleCreditCardFields();
+			creditCardRadio.addEventListener("change", toggleCreditCardFields);
+			codRadio.addEventListener("change", toggleCreditCardFields);
+		});
+		*/
+	</script>
+
+	<script src="https://js.stripe.com/v3/"></script>
+	<script>
+		document.addEventListener("DOMContentLoaded", async function () {
+		  const creditCardRadio = document.getElementById("onlinePayment");
+		  const codRadio = document.getElementById("cashOnDelivery");
+
+		  const stripeBox = document.getElementById("stripeCardBox");
+		  const errorBox = document.getElementById("stripe-error");
+		  const form = document.getElementById("payment-form") || document.querySelector("form");
+
+		  const stripe = Stripe("@ViewBag.StripePk");
+
+		  let elements = null;
+		  let clientSecret = null;
+
+		  let cardNumber = null;
+		  let cardExpiry = null;
+		  let cardCvc = null;
+
+		  async function initStripe() {
+			if (clientSecret) return;
+
+			const res = await fetch("/Checkout/CreateStripeIntent", { method: "POST" });
+			const data = await res.json();
+			clientSecret = data.clientSecret;
+
+			elements = stripe.elements({
+				locale: "en" ,
+				 wallets: { link: "never" }
+			});
+
+			const baseStyle = {
+			  style: {
+				base: {
+				  fontSize: "16px",
+				  color: "#1a1a1a",
+				  "::placeholder": { color: "#a0a0a0" }
+				}
+			  }
+			};
+
+			cardNumber = elements.create("cardNumber", {
+			  ...baseStyle,
+			  disableLink: true
+			});
+
+			cardExpiry = elements.create("cardExpiry", baseStyle);
+			cardCvc = elements.create("cardCvc", baseStyle);
+
+			cardNumber.mount("#card-number");
+			cardExpiry.mount("#card-expiry");
+			cardCvc.mount("#card-cvc");
+
+			// Errors
+			[cardNumber, cardExpiry, cardCvc].forEach(el => {
+			  el.on("change", (event) => {
+				errorBox.textContent = event.error ? event.error.message : "";
+			  });
+			});
+		  }
+
+		  async function togglePaymentUi() {
+			if (creditCardRadio.checked) {
+			  stripeBox.style.display = "block";
+			  await initStripe();
+			} else {
+			  stripeBox.style.display = "none";
+			}
+		  }
+
+		  creditCardRadio.addEventListener("change", togglePaymentUi);
+		  codRadio.addEventListener("change", togglePaymentUi);
+		  await togglePaymentUi();
+
+		  form.addEventListener("submit", async (e) => {
+			if (!creditCardRadio.checked) return;
+
+			e.preventDefault();
+			errorBox.textContent = "";
+
+			const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+			  payment_method: {
+				card: cardNumber,
+				billing_details: {
+				  name: (document.getElementById("FirstName")?.value || "") + " " + (document.getElementById("LastName")?.value || ""),
+				  email: document.getElementById("Email")?.value || ""
+				}
+			  }
+			});
+
+			if (error) {
+			  errorBox.textContent = error.message;
+			  return;
+			}
+			const hidden = document.createElement("input");
+			hidden.type = "hidden";
+			hidden.name = "StripePaymentIntentId";
+			hidden.value = paymentIntent.id;
+			form.appendChild(hidden);
+			form.submit();
+		  });
+		});
+	</script>
+
+}

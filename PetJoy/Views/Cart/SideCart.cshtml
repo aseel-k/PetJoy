@@ -1,0 +1,76 @@
+﻿@model List<PetJoy.Models.CartItem>
+
+@{
+    var total = (decimal)(ViewData["Total"] ?? 0m);
+    var totalItemsCount = Model.Sum(item => item.Quantity);
+}
+
+<style>
+    .badgeRounded {
+        line-height: 19px;
+        font-size: 14px;
+        width: 30px;
+        height: 30px;
+        padding-left: 8px;
+    }
+</style>
+
+<div class="cart-sidebar-content">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="text-dark">Your Cart</h4>
+
+        <span class="badge rounded-circle bg-primary text-white me-3 item-count-badge badgeRounded">
+            @totalItemsCount
+        </span>
+    </div>
+
+    @if (Model.Count > 0)
+    {
+        <ul class="list-unstyled mb-4" style="max-height: 50vh; overflow-y: auto;">
+            @foreach (var item in Model)
+            {
+
+                var productName = item.ProductName;
+                var maxHalfLength = 20;
+                var truncatedName = productName;
+                var displayEllipsis = false;
+
+                if (productName.Length > maxHalfLength)
+                {
+                    truncatedName = productName.Substring(0, maxHalfLength);
+                    displayEllipsis = true;
+                }
+
+                <li class="d-flex justify-content-between align-items-start py-2 border-bottom">
+                    <div>
+                        <strong class="d-block" title="@item.ProductName">
+                            @truncatedName@(displayEllipsis ? "..." : "")
+                        </strong>
+                        <small class="text-muted">Quantity: @item.Quantity</small>
+                    </div>
+                    <div class="fw-bold text-end ms-3">
+                        @((item.Price * item.Quantity).ToString("F2")) JD
+                    </div>
+                </li>
+            }
+        </ul>
+
+        <div class="d-flex justify-content-between fw-bold mt-4 mb-4 pt-2 border-top">
+            <span>Total</span>
+            <span>  @total.ToString("F2") JD</span>
+        </div>
+
+        <a asp-action="Cart" asp-controller="Cart" class="btn w-100 py-2 text-white"
+           style="background-color: #15406b !important; border-color: #15406b !important; font-size: 1.1rem;">
+            Continue to checkout
+        </a>
+    }
+    else
+    {
+        <div class="alert text-center" role="alert" style="background-color: #15406b !important; color: white !important;">
+            Your cart is empty.
+        </div>
+    }
+
+</div>

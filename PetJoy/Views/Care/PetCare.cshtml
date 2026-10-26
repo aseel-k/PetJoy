@@ -1,0 +1,285 @@
+﻿@{
+    ViewBag.Title = "PetCare";
+} 
+
+<style>
+
+    .card {
+        height: 100%;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        max-height: 400px;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, max-height 0.2s ease-in-out;
+    }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+            z-index: 10;
+            max-height: 700px;
+            overflow: visible;
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+    .card-body {
+        padding: 25px 22px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #333;
+        margin-top: 0;
+        margin-bottom: 10px;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .card:hover .card-title {
+        -webkit-line-clamp: unset;
+        overflow: visible;
+        margin-bottom: 15px;
+    }
+
+    .card-text {
+        transition: all 0.3s ease;
+    }
+
+        .card-text .blog-paragraph {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            color: #777;
+            line-height: 1.5;
+            margin-bottom: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: all 0.4s ease-out;
+        }
+
+    .card:hover .card-text .blog-paragraph {
+        -webkit-line-clamp: unset;
+        overflow: visible;
+    }
+
+    .entry-item.col-md-4 {
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-bottom: 30px;
+    }
+</style>
+
+<div class="container">
+    <div class="row pt-5 pb-3">
+        <div class="entry-item col-md-4">
+            <div class="card position-relative">
+                <img src="~/images/Care/care8.jpg" class="img-fluid" alt="Pet Cancer Support Image">
+                <div class="card-body">
+                    <h3 class="card-title">When Your Pet Is Facing Cancer: Support and Resources</h3>
+                    <div class="card-text">
+                        <p class="blog-paragraph">
+                            we know how worrying that can be.
+                            Many cancers can still be managed with proper care,
+                            so watching for changes in behavior, lumps, or appetite remains important.
+                            For treatment options and support, you can visit <span class="fw-bold"> PETLY Veterinary Hospital on Abu Nusayr St. 222 Amman </span>,
+                            their team is ready to help you and your pet through this. Early detection is key to successful treatment.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="entry-item col-md-4">
+            <div class="card position-relative">
+                <img src="~/images/Care/care6.jpg" class="img-fluid" alt="Another Pet-Related Topic Image">
+                <div class="card-body">
+                    <h3 class="card-title">If Your Pet is Facing Kidney Issues: Diet, Hydration & Support</h3>
+                    <div class="card-text">
+                        <p class="blog-paragraph">
+                            Chronic kidney disease (CKD) can be worrying,
+                            but with early detection and management, your pet can still have a good quality of life.
+                            The focus is on monitoring blood work, managing diet (low protein/phosphorus),
+                            and ensuring proper hydration. For specialized diagnosis and treatment plans,
+                            including advanced laboratory testing and dietary counseling, you can visit the
+                            <span class="fw-bold">Humane Center for Animal Welfare Veterinary Clinic in Amman</span>.
+                            Their dedicated team offers comprehensive care to slow the disease's progression.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="entry-item col-md-4">
+            <div class="card position-relative">
+                <img src="~/images/Care/care3.jpg" class="img-fluid" alt="Pet Health & Wellness Image">
+                <div class="card-body">
+                    <h3 class="card-title">The Absolute Importance of Routine Vaccinations</h3>
+                    <div class="card-text">
+                        <p class="blog-paragraph">
+                            Protect your furry friend from common and serious diseases like Parvovirus and Rabies.
+                            Routine vaccination schedules are personalized for your pet's lifestyle and age.
+                            Schedule an appointment with
+                            <span class="fw-bold">First Pet Veterinary Clinic on Abed Al-Raheem Al-Hhaj Mohammad St.11 Amman </span>
+                            for a comprehensive health check-up and vaccine review.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="entry-item col-md-4">
+            <div class="card position-relative">
+                <img src="~/images/Care/care9.jpg" class="img-fluid" alt="Pet Health & Wellness Image">
+                <div class="card-body">
+                    <h3 class="card-title">Managing Pet Diabetes: Symptoms, Insulin, and Monitoring</h3>
+                    <div class="card-text">
+                        <p class="blog-paragraph">
+                            Diabetes is a manageable condition,
+                            but it requires commitment. Watch for increased thirst and urination, weight loss, and changes in appetite. Successful management depends on a strict regimen of daily insulin injections,
+                            a consistent diet, and careful blood glucose monitoring. For diagnosis,
+                            setting up an initial treatment plan, and long-term metabolic control, you can visit
+                            <span class="fw-bold">Vetzone Pet Health Center, located in Mecca St. 5, Amman</span>.
+                            They offer expert guidance to stabilize your pet’s sugar levels and improve their overall health.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="entry-item col-md-4">
+            <div class="card position-relative">
+                <img src="~/images/Care/care7.jpg" class="img-fluid" alt="Pet Health & Wellness Image">
+                <div class="card-body">
+                    <h3 class="card-title">Rabbit Health Crisis: Recognizing and Treating GI Stasis</h3>
+                    <div class="card-text">
+                        <p class="blog-paragraph">
+                            GI Stasis is a life-threatening emergency often caused by pain, stress,
+                            or a low-fiber diet. Symptoms include a sudden refusal to eat,
+                            absence of fecal pellets, and a hunched posture (indicating pain).
+                            This condition is often complicated by dehydration and liver issues.
+                            If your rabbit stops eating for more than 4–6 hours,
+                            seek immediate veterinary attention. For expert diagnosis
+                            and emergency critical care, you can visit
+                            <span class="fw-bold">Best Friend Veterinary Clinic on 7th circle, Zahran St, Amman</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="entry-item col-md-4">
+            <div class="card position-relative">
+                <img src="~/images/Care/care4.jpg" class="img-fluid" alt="Pet Health & Wellness Image">
+                <div class="card-body">
+                    <h3 class="card-title">Canine Ehrlichiosis: Recognizing and Treating</h3>
+                    <div class="card-text">
+                        <p class="blog-paragraph">
+                            Ehrlichiosis is a bacterial infection transmitted by ticks.
+                            Symptoms can vary widely but often include fever, lethargy, poor appetite, and sometimes nosebleeds.
+                            It can progress to a chronic phase, affecting bone marrow and requiring long-term treatment.
+                            Regular tick prevention is essential. Diagnosis requires a blood test, and treatment involves a
+                            specific course of antibiotics. For diagnosis and management of this prevalent condition, consult with
+                            <span class="fw-bold">TURQUOISE vet clinic Wasfi At Tall St.</span>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="entry-item col-md-4">
+            <div class="card position-relative">
+                <img src="~/images/Care/care2.jpg" class="img-fluid" alt="Pet Health & Wellness Image">
+                <div class="card-body">
+                    <h3 class="card-title">Feline Hyperthyroidism: Symptoms and Treatment Options</h3>
+                    <div class="card-text">
+                        <p class="blog-paragraph">
+                            Hyperthyroidism is caused by the overproduction of thyroid hormones,
+                            common in cats over 10 years old. signs are dramatic weight loss despite having a huge appetite,
+                            increased thirst, and restlessness. Diagnosis is confirmed with a simple blood test.
+                            For long-term management, including medication, special diets,
+                            , you can consult with
+                            <span class="fw-bold">Best Friend Veterinary Clinic on 7th circle, Zahran St, Amman</span>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="entry-item col-md-4">
+            <div class="card position-relative">
+                <img src="~/images/Care/care5.jpg" class="img-fluid" alt="Pet Health & Wellness Image">
+                <div class="card-body">
+                    <h3 class="card-title">Pacheco’s Disease in birds Causes, Signs, and Risks </h3>
+                    <div class="card-text">
+                        <p class="blog-paragraph">
+                            It's' a severe, rapidly progressing herpesvirus that causes high
+                            mortality in parrots. Often, the first sign is sudden death, but milder symptoms
+                            can include lethargy, feather plucking, and bright yellow-green diarrhea.
+                            It is highly contagious among flocks. Immediate diagnosis through lab testing is crucial for
+                            quarantine and potential antiviral treatment. For expert avian diagnostics and intensive care
+                            , you can contact the <span class="fw-bold">International Veterinary Center in Amman</span>,
+                            a facility often equipped for exotic pet emergencies.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="entry-item col-md-4">
+            <div class="card position-relative">
+                <img src="~/images/Care/care10.jpg" class="img-fluid" alt="Pet Health & Wellness Image">
+                <div class="card-body">
+                    <h3 class="card-title">FIP in Cats: Recognizing Symptoms and Hope for Treatment</h3>
+                    <div class="card-text">
+                        <p class="blog-paragraph">
+                            FIP, caused by a mutation of Feline Coronavirus,
+                            was once universally fatal,
+                            but it can often be treated.
+                            Symptoms vary widely and can include persistent fever,
+                            weight loss, and fluid buildup in the abdomen ("wet FIP").
+                            Diagnosis requires advanced testing to confirm
+                            the mutated virus. If you suspect FIP
+                            , seek a clinic with access to the latest
+                            research and diagnostic tools.
+                            For specialized feline and internal medicine support,
+                            you can visit the
+                            <span class="fw-bold">Best Friend Veterinary Clinic on 7th circle, Zahran St, Amman</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery-1.11.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+<script src="js/plugins.js"></script>
+<script src="js/script.js"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>

@@ -1,0 +1,117 @@
+﻿@{
+    ViewData["Title"] = "Application Submitted";
+}
+
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+<style>
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Pop animation for the emoji */
+    @@keyframes burst {
+        0% {
+            transform: scale(0.2) rotate(0deg);
+            opacity: 0;
+        }
+
+        50% {
+            transform: scale(1.4) rotate(12deg);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1) rotate(0deg);
+        }
+    }
+
+    .success-card {
+        border: none;
+        background: #ffffff;
+        border-radius: 25px;
+        padding: 40px;
+        text-align: center;
+        box-shadow: 0px 8px 25px rgba(0,0,0,0.15);
+        animation: fadeIn 0.45s ease-out;
+    }
+
+    .success-icon {
+        font-size: 5rem;
+        color: #1b4b8b;
+        margin-bottom: 20px;
+        animation: burst 0.6s ease-out;
+        display: inline-block;
+    }
+
+    .success-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #1b4b8b;
+    }
+
+    .success-text {
+        font-size: 1.1rem;
+        color: #6c757d;
+        margin-top: 15px;
+    }
+
+    .btn-home {
+        margin-top: 30px;
+        padding: 12px 35px;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        background-color: #1b4b8b;
+        color: white;
+        border: none;
+        transition: 0.25s;
+    }
+
+        .btn-home:hover {
+            background-color: #163a6b;
+            transform: translateY(-2px);
+        }
+
+        .btn-home:focus,
+        .btn-home:active,
+        .btn-home:visited {
+            outline: none;
+            box-shadow: none;
+            transform: none;
+            background-color: #1b4b8b; 
+            color: white;
+        }
+
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="success-card">
+
+                <div class="success-icon">🎉</div>
+
+                <h2 class="success-title">Form Submitted Successfully!</h2>
+
+                <p class="success-text">
+                    Thank you for submitting your adoption form.
+                    Our team will review your information and contact you soon.
+                </p>
+
+                <a asp-controller="AdoptPet" asp-action="Adopt" class="btn btn-home">
+                    Back to Pets
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

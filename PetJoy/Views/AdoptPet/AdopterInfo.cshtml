@@ -1,0 +1,399 @@
+﻿@model PetJoy.Models.AdoptionForm_AdoptPet
+@{
+	ViewData["Title"] = "AdopterInfo";
+}
+
+<link rel="stylesheet"
+	  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+	.adopt-header {
+		font-weight: 700;
+		color: #1b4b8b;
+		text-transform: capitalize;
+		font-size: 2.5rem;
+	}
+
+	.adopt-subtitle {
+		font-size: 1.1rem;
+		color: #6c757d;
+	}
+
+	.adopt-card {
+		border: none;
+		border-radius: 20px;
+		background: white;
+		padding: 45px;
+		box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
+	}
+
+	.section-title {
+		font-weight: 600;
+		color: #1b4b8b;
+		margin-bottom: 15px;
+		padding-top: 15px;
+		border-top: 1px solid #eee;
+		font-size: 1.6rem;
+	}
+
+
+
+	/* Style for the question text */
+	.question-label {
+		font-weight: 600;
+		margin-bottom: 5px;
+	}
+
+
+
+	/* Style for the instruction text */
+	.question-hint {
+		font-size: 0.9em;
+		color: #6c757d;
+		display: block;
+		margin-bottom: 8px;
+	}
+
+
+
+	/* Input Field Styling */
+	.form-control, .form-select {
+		border-radius: 12px;
+		padding: 12px;
+		font-size: 0.95rem;
+		border: 2px solid #ced4da;
+		transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	}
+
+		.form-control:focus, .form-select:focus {
+			border-color: #1b4b8b;
+			outline: 0;
+			box-shadow: 0 0 0 0.25rem rgba(27, 75, 139, 0.25); 
+		}
+
+	.form-check-input {
+		width: 1.15em;
+		height: 1.15em;
+		margin-top: 0.2em;
+		border: 2px solid #6c757d;
+	}
+
+		.form-check-input:checked {
+			background-color: #1b4b8b;
+			border-color: #1b4b8b;
+		}
+
+		.form-check-input:focus {
+			border-color: #1b4b8b;
+			box-shadow: 0 0 0 0.25rem rgba(27, 75, 139, 0.25);
+		}
+
+
+	.btn-submit {
+		background-color: #1b4b8b;
+		border: none;
+		padding: 14px;
+		border-radius: 12px;
+		font-size: 1.1rem;
+		font-weight: 600;
+		color: #fff;
+		transition: background-color 0.3s ease, box-shadow 0.3s ease;
+	}
+
+		.btn-submit:disabled {
+			opacity: 0.7;
+			cursor: not-allowed;
+			background-color: #1b4b8b;
+		}
+
+		.btn-submit:hover:not(:disabled) {
+			background-color: #163a6b;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+			transform: none;
+			opacity: 1;
+			color: #fff;
+		}
+
+</style>
+
+<div class="container py-5">
+	<h2 class="text-center mb-3 adopt-header">Adoption Form for @Model.Pet.PetName</h2>
+
+	<p class="text-center adopt-subtitle mb-5">Please provide detailed and truthful answers to all questions.</p>
+
+	<div class="row justify-content-center">
+		<div class="col-md-8 col-lg-7">
+			<div class="adopt-card">
+
+				<form asp-action="SubmitApplication" method="post" id="adoptionForm">
+					<input type="hidden" name="Form.AdoptionId" value="@Model.Pet.AdoptionId">
+
+
+					<h4 class="section-title" style="border-top: none; padding-top: 0;">Adopter Details</h4>
+
+					<div class="mb-3">
+						<label for="FullName" class="form-label question-label">Full Name <span style="color:red">*</span></label>
+						<input type="text" class="form-control" id="FullName" name="Form.FullName" value="@Model.Form.FullName" required>
+					</div>
+
+
+					<div class="mb-3">
+						<label for="Email" class="form-label question-label">Email <span style="color:red">*</span></label>
+						<input type="email" class="form-control" id="Email" name="Form.Email" value="@Model.Form.Email" required>
+					</div>
+					<div class="mb-3">
+						<label for="PhoneNumber" class="form-label question-label">Phone Number <span style="color:red">*</span></label>
+						<input type="tel" class="form-control" id="PhoneNumber" name="Form.PhoneNumber" value="@Model.Form.PhoneNumber" required>
+					</div>
+					<div class="mb-4">
+						<label for="Age" class="form-label question-label">Your Age <span style="color:red">*</span></label>
+						<input type="number" class="form-control" id="Age" name="Form.Age" value="@Model.Form.Age" min="18" max="100" required>
+						<span id="ageWarning" style="color: red; font-size: 0.9rem; display: none;">Must be 18+ to confirm legal adoption age.</span>
+					</div>
+
+					<h4 class="section-title">Home & Lifestyle</h4>
+
+					<div class="mb-3">
+						<label for="Address" class="form-label question-label">Address<span style="color:red"> *</span></label>
+						<input type="text" class="form-control" id="Address" name="Form.Address" value="@Model.Form.Address" required>
+					</div>
+
+					<div class="row mb-3">
+						<div class="col-md-6">
+							<label for="City" class="form-label question-label">City<span style="color:red"> *</span></label>
+							<select class="form-select" id="City" name="Form.City" required>
+								<option value="" selected disabled>Select a City</option>
+								@{
+									var cities = new List<string> { "Amman", "Zarqa", "Irbid", "Aqaba", "Madaba", "Jerash", "Ajloun", "Karak", "Mafraq", "Tafilah", "Ma'an", "Balqa" };
+								}
+								@foreach (var city in cities)
+								{
+									<option value="@city" selected="@(Model.Form.City == city ? "selected" : null)">@city</option>
+								}
+							</select>
+						</div>
+						<div class="col-md-6">
+							<label for="PostalCode" class="form-label question-label">Postal Code</label>
+							<input type="text" class="form-control" id="PostalCode" name="Form.PostalCode" value="@Model.Form.PostalCode">
+						</div>
+					</div>
+
+					<div class="mb-3">
+						<label for="HousingStatus" class="form-label question-label">Housing Status <span style="color:red">*</span></label>
+						<span class="question-hint">(Do you own your residence or do you rent it?)</span>
+						<select class="form-select" id="HousingStatus" name="Form.HousingStatus" required>
+							<option value="" disabled>Select...</option>
+							<option value="Owned" selected="@(Model.Form.HousingStatus == "Owned" ? "selected" : null)">Owned</option>
+							<option value="Rented" selected="@(Model.Form.HousingStatus == "Rented" ? "selected" : null)">Rented</option>
+						</select>
+					</div>
+
+					<div class="mb-4">
+						<label class="form-label question-label d-block">Are there any children living at your home? <span style="color:red"> *</span></label>
+						<div class="mb-2">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="Form.HasCurrentChildren" id="ChildrenYes" value="Yes" required checked="@(Model.Form.HasCurrentChildren == "Yes" ? "checked" : null)">
+								<label class="form-check-label" for="ChildrenYes">Yes</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="Form.HasCurrentChildren" id="ChildrenNo" value="No" checked="@(Model.Form.HasCurrentChildren == "No" ? "checked" : null)">
+								<label class="form-check-label" for="ChildrenNo">No</label>
+							</div>
+						</div>
+					</div>
+
+					<h4 class="section-title">Pet History</h4>
+
+					<div class="mb-4">
+						<label class="form-label question-label d-block">Do you currently have other pets? <span style="color:red">*</span></label>
+						<div class="mb-2">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="Form.HasCurrentPets" id="CurrentPetsYes" value="Yes" required checked="@(Model.Form.HasCurrentPets == "Yes" ? "checked" : null)">
+								<label class="form-check-label" for="CurrentPetsYes">Yes</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="Form.HasCurrentPets" id="CurrentPetsNo" value="No" checked="@(Model.Form.HasCurrentPets == "No" ? "checked" : null)">
+								<label class="form-check-label" for="CurrentPetsNo">No</label>
+							</div>
+						</div>
+						<div id="CurrentPetsDetail" class="conditional-detail" style="display:none;">
+							<label for="CurrentPetDetails" class="form-label mt-2 question-label">
+								Please provide details for each pet:
+								<span class="question-hint">(Type, Breed, Age, Spay/Neuter/Vaccination Status)</span>
+							</label>
+							<textarea class="form-control" id="CurrentPetDetails" name="Form.CurrentPetDetails" rows="3">@Model.Form.CurrentPetDetails</textarea>
+						</div>
+					</div>
+
+					<div class="mb-4">
+						<label class="form-label question-label d-block">Have you owned pets before?<span style="color:red"> *</span></label>
+						<div class="mb-2">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="Form.HasPreviousPets" id="PreviousPetsYes" value="Yes" required checked="@(Model.Form.HasPreviousPets == "Yes" ? "checked" : null)">
+								<label class="form-check-label" for="PreviousPetsYes">Yes</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="Form.HasPreviousPets" id="PreviousPetsNo" value="No" checked="@(Model.Form.HasPreviousPets == "No" ? "checked" : null)">
+								<label class="form-check-label" for="PreviousPetsNo">No</label>
+							</div>
+						</div>
+						<div id="PreviousPetsDetail" class="conditional-detail" style="display:none;">
+							<label for="PreviousPetFate" class="form-label mt-2 question-label">Describe your relationship with your last pet:</label>
+							<textarea class="form-control" id="PreviousPetFate" name="Form.PreviousPetFate" rows="3">@Model.Form.PreviousPetFate</textarea>
+						</div>
+					</div>
+
+
+					<h4 class="section-title">Housing & Finance</h4>
+
+					@* PetConfinement Checkbox Group *@
+					<div class="mb-4">
+						<label class="form-label question-label d-block">
+							Pet Confinement and Housing: Where will the pet be kept? <span style="color:red">*</span>
+						</label>
+
+						<div class="mb-2">
+							@{
+								bool IsConfinementChecked(string val) =>
+								Model.Form.PetConfinement?.Contains(val) == true;
+							}
+
+							<div class="form-check form-check-inline">
+								<input class="form-check-input pet-confinement-option"
+									   type="checkbox"
+									   value="Indoor"
+									   @(IsConfinementChecked("Indoor") ? "checked" : "")>
+								<label class="form-check-label">Indoor</label>
+							</div>
+
+							<div class="form-check form-check-inline">
+								<input class="form-check-input pet-confinement-option"
+									   type="checkbox"
+									   value="Outdoor"
+									   @(IsConfinementChecked("Outdoor") ? "checked" : "")>
+								<label class="form-check-label">Outdoor</label>
+							</div>
+						</div>
+
+						<input type="hidden"
+							   id="PetConfinementHidden"
+							   name="Form.PetConfinement"
+							   value="@Model.Form.PetConfinement"
+							   required />
+					</div>
+
+					@* PetConfinement Checkbox Group *@
+
+					<div class="form-check mb-4">
+						<input class="form-check-input" type="checkbox" value="true" id="FinancialAck" name="Form.FinancialAck" required checked="@(Model.Form.FinancialAck ? "checked" : null)">
+						<label class="form-check-label question-label" for="FinancialAck">
+							Financial Capability Acknowledgement
+							<span style="color:red"> *</span>
+						</label>
+						<span class="question-hint">(I acknowledge that I can afford all costs associated with caring for the pet)</span>
+					</div>
+
+					<button type="submit" class="btn btn-submit text-white w-100 mt-4" id="submitButton">Submit Form</button>
+				</form>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+	$(document).ready(function() {
+		const ageInput = document.getElementById("Age");
+		const ageWarning = document.getElementById("ageWarning");
+
+		// --- Age Validation ---
+		ageInput.addEventListener("input", function () {
+			if (ageInput.value && ageInput.value < 18) {
+				ageWarning.style.display = "inline";
+			} else {
+				ageWarning.style.display = "none";
+			}
+		});
+
+		// ---  Conditional Field Logic  ---
+		function handleConditionalFields(selector, detailContainerId) {
+
+			$(selector).on('change', function() {
+				var detailContainer = $(detailContainerId);
+				var isYes = ($(this).val() === 'Yes' && $(this).is(':checked'));
+				var formElements = detailContainer.find('input:not([type=radio]), textarea, select');
+
+				if (!detailContainer.data('initialized')) {
+					formElements.each(function() {
+						$(this).data('original-required', $(this).prop('required'));
+					});
+					detailContainer.data('initialized', true);
+				}
+
+				if (isYes) {
+					detailContainer.slideDown(300);
+					formElements.prop('required', function() { return $(this).data('original-required'); });
+				} else {
+					detailContainer.slideUp(300);
+					formElements.prop('required', false).val('');
+				}
+			});
+
+			// Initial check on load to set the initial state 
+			if($(selector + ':checked').length) {
+				$(selector + ':checked').trigger('change');
+			} else {
+				$(detailContainerId).hide();
+			}
+		}
+
+		// Pet Confinement Checkbox Aggregation Fix 
+		function handlePetConfinement() {
+			// Target the checkboxes using the new class
+			const checkboxes = $('.pet-confinement-option');
+			// Target the hidden field using its ID/Name for form submission
+			const hiddenInput = $('#PetConfinementHidden');
+
+			checkboxes.on('change', updateHiddenField);
+
+			updateHiddenField();
+		}
+
+		function updateHiddenField() {
+				let selectedValues = [];
+				checkboxes.each(function() {
+					if ($(this).is(':checked')) {
+						selectedValues.push($(this).val());
+					}
+				});
+
+				hiddenInput.val(selectedValues.join(', '));
+
+				// ensures at least one choice is made, matching the DB's NOT NULL constraint.
+				if (selectedValues.length === 0) {
+					hiddenInput.attr('required', 'required');
+				} else {
+					hiddenInput.removeAttr('required');
+				}
+			}
+
+		// --- Execute Handlers ---
+		handleConditionalFields('input[name="Form.HasCurrentPets"]', '#CurrentPetsDetail');
+		handleConditionalFields('input[name="Form.HasPreviousPets"]', '#PreviousPetsDetail');
+		handlePetConfinement();
+	});
+
+	document.querySelectorAll('.pet-confinement-option').forEach(cb => {
+		cb.addEventListener('change', () => {
+			let selected = [];
+			document.querySelectorAll('.pet-confinement-option:checked').forEach(c => {
+				selected.push(c.value);
+			});
+
+			document.getElementById('PetConfinementHidden').value = selected.join(', ');
+		});
+	});
+</script>
