@@ -39,7 +39,7 @@ PetJoy is a full-stack web application built using **ASP.NET Core MVC**, **Entit
 Developed as a capstone graduation project for the Bachelor of Science in Computer Information Systems (CIS) at Al-Balqa Applied University. It demonstrates full-stack software design, clean database modeling, stored procedures, and secure MVC architecture.
 
 ### **Development Team**
-* **Aseel El-Khatib** (Full-Stack Developer) – [@aseel-k](https://github.com/aseel-k)
+* **Aseel El-Khatib** (Full-Stack Developer) – [@aseel-k](https://github.com/aseel-k) 
 * **Haneen Mustafa** (Full-Stack Developer) – [Haneen-Alhasan](https://github.com/Haneen-Alhasan)
 * **Hala Muhammad** (Front-End Developer) – [iihhala03](https://github.com/iihhala03)
 * **Razan Qaqish** (Front-End Developer) – [razanqaqish2](https://github.com/razanqaqish2)
